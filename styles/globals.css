@@ -1,26 +1,30 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
+.button {
+  margin: .5rem;
+  /* ボタン外の余白 */
+  padding: 0 1.25rem;
+  /* ボタン内の余白 */
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  background-color: rgb(8, 128, 108);
+  /* ボタンの背景色 */
+  box-shadow: 0 0 20px rgb(88, 233, 173);
+  /* ボタンの影 */
 
-* {
-  box-sizing: border-box;
-}
+  color: rgba(255, 255, 255);
+  /* ボタン内の文字色 */
+  font-family: inherit;
+  /* ボタン内の文字の見た目 */
+  font-size: 1.125rem;
+  /* ボタン内の文字サイズ */
+  line-height: 2.5rem;
+  /* ボタン内の文字高さ */
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+  border: outset .1rem rgb(227, 225, 235);
+  /* ボタンの枠線 */
+  border-radius: 1rem;
+  /* ボタンの枠線の丸み */
+
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  /* 関数的に変化する */
+  transition-duration: .6s;
+  /* 0.6秒間かけて実行 */
 }
