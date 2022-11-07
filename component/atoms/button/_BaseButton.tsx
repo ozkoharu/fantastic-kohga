@@ -17,3 +17,4 @@ const _BaseButton: React.FC<Props> = ({
         </button>
     )
 }
+export default _BaseButton;
