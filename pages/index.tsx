@@ -1,13 +1,13 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
-const Url = 'http://saza.kohga.local:3001/createuser';
+const CreateUserUrl = 'http://saza.kohga.local:3001/createuser';
 
 const WelcomePage = () => {
     const router = useRouter();
     const onClickCarUse = async () => {
         try {
-            const res = await fetch(Url);
+            const res = await fetch(CreateUserUrl);
             if (res.status === 200 || (await res.json()).succeeded) {
                 router.push('/CarMenu');
             } else {
@@ -19,7 +19,7 @@ const WelcomePage = () => {
     }
     return (
         <>
-            <button disabled={true}>車をつかう</button>
+            <button onClick={onClickCarUse}>車をつかう</button>
             <button>車管理</button>
         </>
     )
