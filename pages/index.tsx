@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const CreateUserUrl = 'http://saza.kohga.local:3001/createuser';
 
-const WelcomePage = () => {
+const WelcomePage: NextPage = () => {
     const router = useRouter();
     const onClickCarUse = async () => {
         try {
