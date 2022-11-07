@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import _BaseButton from "../component/atoms/button/_BaseButton";
 
 const CreateUserUrl = 'http://saza.kohga.local:3001/createuser';
 
@@ -9,6 +10,8 @@ const WelcomePage: NextPage = () => {
         try {
             const res = await fetch(CreateUserUrl);
             if (res.status === 200 || (await res.json()).succeeded) {
+                const id = (await res.json()).data.userId;
+                console.log('userId', id);
                 router.push('/CarMenu');
             } else {
                 alert('ユーザーIDとれなかったよ')
@@ -19,8 +22,12 @@ const WelcomePage: NextPage = () => {
     }
     return (
         <>
-            <button onClick={onClickCarUse} className="button">車をつかう</button>
-            <button className="button">車管理</button>
+            <_BaseButton onClick={onClickCarUse} _class='button'>
+                車をつかう
+            </_BaseButton>
+            <_BaseButton _class="button">
+                車管理
+            </_BaseButton>
         </>
     )
 }
