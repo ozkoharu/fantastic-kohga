@@ -19,8 +19,8 @@ const WelcomePage: NextPage = () => {
     }
     return (
         <>
-            <button onClick={onClickCarUse}>車をつかう</button>
-            <button>車管理</button>
+            <button onClick={onClickCarUse} className="button">車をつかう</button>
+            <button className="button">車管理</button>
         </>
     )
 }
