@@ -3,16 +3,16 @@ import React from "react";
 interface Props {
     children?: React.ReactNode;
     onClick?: () => void;
-    _class?: string;
+    _class?: string
 }
 
 const _BaseButton: React.FC<Props> = ({
     children,
     onClick,
-    _class,
+    _class
 }) => {
     return (
-        <button onClick={onClick} className='_class'>
+        <button onClick={onClick} className={_class}>
             {children}
         </button>
     )
