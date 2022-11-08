@@ -9,8 +9,9 @@ const WelcomePage: NextPage = () => {
     const onClickCarUse = async () => {
         try {
             const res = await fetch(CreateUserUrl);
-            if (res.status === 200 || (await res.json()).succeeded) {
-                const id = (await res.json()).data.userId;
+            const data = await res.json();
+            if (res.status === 200 && data.succeeded) {
+                const id = data.userId;
                 console.log('userId', id);
                 router.push('/CarMenu');
             } else {
