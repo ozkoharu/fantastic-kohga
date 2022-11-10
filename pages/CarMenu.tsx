@@ -1,11 +1,12 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import _BaseButton from "../component/atoms/button/_BaseButton";
+import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 
 const CarMenu: NextPage = () => {
     const router = useRouter();
-    const onClickDestination = () => {
-
+    const onClickDesitination = () => {
+        router.push('/Desitination');
     }
     const onClickExistsRoute = () => {
 
@@ -14,11 +15,15 @@ const CarMenu: NextPage = () => {
 
     }
     const onClickEndPage = () => {
+        router.push('/EndPage');
+    }
+    const onClickJunkai = () => {
 
     }
+
     return (
         <>
-            <_BaseButton onClick={onClickDestination} _class="button">
+            <_BaseButton onClick={onClickDesitination} _class="button">
                 新規ルート作成
             </_BaseButton>
             <_BaseButton onClick={onClickExistsRoute} _class="button">
@@ -30,6 +35,7 @@ const CarMenu: NextPage = () => {
             <_BaseButton onClick={onClickEndPage} _class="button">
                 終わり
             </_BaseButton>
+
         </>
     )
 }
