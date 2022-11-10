@@ -1,20 +1,25 @@
 import e from "express";
 import { LatLng } from "leaflet";
 import React, { SetStateAction } from "react";
-import { MapContainer, Marker, TileLayer, useMapEvents, Circle } from "react-leaflet";
-import { LatLangRadius, relayPoint } from "../../pages/Desitination";
+import { MapContainer, Marker, TileLayer, useMapEvents, Circle, Polyline } from "react-leaflet";
+
 
 const position = new LatLng(38.72311671577611, 141.0346841825174);
 const zoomlebel = 18;
+const path = { color: "green" }
 interface Props {
-    circle: LatLangRadius[];
+    circle: LatLngRadius[];
     relayPoint: relayPoint[];
-    setRelayPoint: React.Dispatch<SetStateAction<relayPoint[]>>
+    poly: LatLng[][];
+    setPoly: React.Dispatch<SetStateAction<LatLng[][]>>;
+    setRelayPoint: React.Dispatch<SetStateAction<relayPoint[]>>;
 }
 
 const DesitinationMap: React.FC<Props> = ({
     circle,
     relayPoint,
+    poly,
+    setPoly,
     setRelayPoint,
 }) => {
 
@@ -71,6 +76,28 @@ const DesitinationMap: React.FC<Props> = ({
         )
     }
 
+    const MultiPoly = () => {
+        return (
+            <React.Fragment>
+                {
+                    poly.map((elem, index) =>
+                        <Polyline
+                            weight={10}
+                            pathOptions={path}
+                            positions={elem}
+                            key={index}
+                            eventHandlers={{
+                                click: (e) => {
+
+                                }
+                            }}
+                        ></Polyline>
+                    )
+                }
+            </React.Fragment>
+        )
+    }
+
 
     return (
         <MapContainer center={position} zoom={zoomlebel} scrollWheelZoom={false} doubleClickZoom={false} >
@@ -80,6 +107,7 @@ const DesitinationMap: React.FC<Props> = ({
             />
             <ClickMarker />
             <CircleMarker />
+            <MultiPoly />
         </MapContainer >
     )
 }
