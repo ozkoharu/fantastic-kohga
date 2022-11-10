@@ -40,6 +40,7 @@ const Desitination: NextPage = () => {
     const [relayPoint, setRelayPoint] = useState<relayPoint[]>([]);
     const [viewCircle, setViewCircle] = useState<LatLangRadius[]>([]);
     const [junkai, setJunkai] = useState<boolean>(false);
+    const [pathOk, setPathOk] = useState<boolean>(false);
     const router = useRouter();
 
     const onClickRouteSearch = () => {
@@ -67,6 +68,9 @@ const Desitination: NextPage = () => {
     const onClickRouteRiset = () => {
         setRelayPoint([]);
     }
+    const onChangePathOk = () => {
+        setPathOk(!pathOk);
+    }
 
 
     return (
@@ -85,6 +89,9 @@ const Desitination: NextPage = () => {
             </_BaseButton>
             <CheckBoxForm name="junkai" id="junkai" onChange={() => setJunkai(!junkai)}>
                 巡回ルート
+            </CheckBoxForm>
+            <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
+                通行可能領域表示
             </CheckBoxForm>
             <DynamicMapNoSSR setRelayPoint={setRelayPoint} circle={viewCircle} relayPoint={relayPoint} />
         </>
