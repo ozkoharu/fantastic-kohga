@@ -1,14 +1,15 @@
-import e from "express";
 import { LatLng } from "leaflet";
 import React, { SetStateAction } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents, Circle, Polyline } from "react-leaflet";
-
+import { LatLangRadius } from "../../pages/Desitination";
+import { relayPoint } from "../../pages/Desitination";
 
 const position = new LatLng(38.72311671577611, 141.0346841825174);
 const zoomlebel = 18;
 const path = { color: "green" }
+
 interface Props {
-    circle: LatLngRadius[];
+    circle: LatLangRadius[];
     relayPoint: relayPoint[];
     poly: LatLng[][];
     setPoly: React.Dispatch<SetStateAction<LatLng[][]>>;

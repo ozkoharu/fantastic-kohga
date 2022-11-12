@@ -39,6 +39,7 @@ const Desitination: NextPage = () => {
     const { userId } = useContext(UserIdContext);
     const [relayPoint, setRelayPoint] = useState<relayPoint[]>([]);
     const [viewCircle, setViewCircle] = useState<LatLangRadius[]>([]);
+    const [poly, setPoly] = useState<LatLng[][]>([[]]);
     const [junkai, setJunkai] = useState<boolean>(false);
     const [pathOk, setPathOk] = useState<boolean>(false);
     const router = useRouter();
@@ -93,7 +94,13 @@ const Desitination: NextPage = () => {
             <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
                 通行可能領域表示
             </CheckBoxForm>
-            <DynamicMapNoSSR setRelayPoint={setRelayPoint} circle={viewCircle} relayPoint={relayPoint} />
+            <DynamicMapNoSSR
+                setRelayPoint={setRelayPoint}
+                circle={viewCircle}
+                relayPoint={relayPoint}
+                poly={poly}
+                setPoly={setPoly}
+            />
         </>
     )
 }
