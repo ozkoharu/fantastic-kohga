@@ -2,7 +2,7 @@ import React from "react";
 
 interface Props {
     children?: React.ReactNode;
-    onClick?: () => void;
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     _class?: string
 }
 
@@ -12,7 +12,7 @@ const _BaseButton: React.FC<Props> = ({
     _class
 }) => {
     return (
-        <button onClick={onClick} className={_class}>
+        <button onClick={onClick} className={_class} >
             {children}
         </button>
     )
