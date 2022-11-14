@@ -1,0 +1,11 @@
+.App {
+  text-align: center;
+  height: 90vh;
+}
+
+.leaflet-container {
+  position: relative;
+
+  width: 90vw;
+  height: 90vh;
+}
