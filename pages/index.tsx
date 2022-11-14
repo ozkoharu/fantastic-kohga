@@ -13,7 +13,7 @@ const WelcomePage: NextPage = () => {
     const router = useRouter();
     const [userId, setUserId] = useState<string>('')
     const onClickCarUse = async () => {
-        router.push('/CarMenu'); //DEBUG
+        //router.push('/CarMenu'); //DEBUG
         try {
             const res = await fetch(CreateUserUrl);
             const data = await res.json();
