@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
-import React, { useState, SetStateAction, useContext } from "react";
+import React, { useState, SetStateAction, useContext, useEffect } from "react";
 import ReactDOM from "react-dom";
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import DesitinationMap from "../component/map/DestinationMap";
 import { circle, LatLng } from "leaflet";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
-import { UserIdContext } from ".";
+import { UserIdContext } from "./_app";
+
+
 
 interface Props {
     event: React.Dispatch<SetStateAction<number>>
@@ -46,18 +48,22 @@ const Desitination: NextPage = () => {
     const [isAfterRouteSearch, setIsAfterRouteSearch] = useState<boolean>(false);
     const router = useRouter();
 
-    const onClickRouteSearch = async () => {
+    const onClickRouteSearch = async (e: React.MouseEvent<HTMLButtonElement>) => {
         const relayFlag = relayPoint.map((e) => e.Relay);
-        const dataPoint = relayPoint.map((e) => e.Point);
+        const dataPoint = relayPoint.map((e) => e.Point)
 
         const PostData: PostDataSearch = {
             "userId": userId,
             "junkai": junkai,
             "data": dataPoint,
             "relay": relayFlag,
-        }
+        };
+        const target = e.currentTarget;
+        target.disabled = true;
+
         //fetch処理
         try {
+            await new Promise((r) => setTimeout(() => r(0), 10000));
             const res = await fetch(PostAstarUrl, {
                 method: "POST",
                 headers: {
@@ -69,8 +75,11 @@ const Desitination: NextPage = () => {
             //resultにはJSONを解決したオブジェクトが入ってる
             const result = await res.json();
             console.log('result', result);
-            if ('succeeded' in result && result.succeeded === true || true) { //FIXME
+
+            if ('succeeded' in result && result.succeeded === true) {
+                setPoly(result.route);
                 setIsAfterRouteSearch(true);
+
             } else {
                 //失敗しましたモーダル表示
                 alert('経路探索を失敗しました');
@@ -78,8 +87,11 @@ const Desitination: NextPage = () => {
 
         } catch (e) {
             console.log('e', e);
+        } finally {
+            target.disabled = false;
         }
-        // router.push('/AddRoutePage')//DEBUG
+
+
     }
     const onClickBack = () => {
         router.push('/CarMenu');
@@ -87,8 +99,9 @@ const Desitination: NextPage = () => {
     const onClickTurtial = () => {
 
     }
-    const onClickRouteRiset = () => {
+    const onClickRouteReset = () => {
         setRelayPoint([]);
+        setPoly([[]]);
     }
     const onChangePathOk = () => {
 
@@ -130,7 +143,7 @@ const Desitination: NextPage = () => {
             <_BaseButton onClick={onClickTurtial} _class="button">
                 チュートリアルを開く
             </_BaseButton>
-            <_BaseButton onClick={onClickRouteRiset} _class="button">
+            <_BaseButton onClick={onClickRouteReset} _class="button">
                 目的地リセット
             </_BaseButton>
             <CheckBoxForm name="junkai" id="junkai" onChange={() => setJunkai(!junkai)}>
