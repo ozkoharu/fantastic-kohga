@@ -7,7 +7,6 @@ import _BaseButton from "../component/atoms/button/_BaseButton";
 import DesitinationMap from "../component/map/DestinationMap";
 import { circle, LatLng } from "leaflet";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
-import { type } from "os";
 import { UserIdContext } from ".";
 
 interface Props {
@@ -27,8 +26,10 @@ export type PostDataSearch = {
     "data": LatLng[];
     "relay": boolean[];
 }
+const PostAstarUrl = 'http://saza.kohga.local:3001/astar';
+const PostOkRouteUrl = 'http://saza.kohga.local:3001/getPassable';
 
-const DynamicMapNoSSR = dynamic(() => {
+export const DynamicMapNoSSR = dynamic(() => {
     return (
         import('../component/map/DestinationMap')
     )
@@ -42,15 +43,13 @@ const Desitination: NextPage = () => {
     const [poly, setPoly] = useState<LatLng[][]>([[]]);
     const [junkai, setJunkai] = useState<boolean>(false);
     const [pathOk, setPathOk] = useState<boolean>(false);
+    const [isAfterRouteSearch, setIsAfterRouteSearch] = useState<boolean>(false);
     const router = useRouter();
 
-    const onClickRouteSearch = () => {
-        let relayFlag: boolean[] = [];
-        let dataPoint: LatLng[] = [];
-        for (let i = 0; i < relayPoint.length; i++) {
-            relayFlag[i] = relayPoint[i].Relay;
-            dataPoint[i] = relayPoint[i].Point;
-        }
+    const onClickRouteSearch = async () => {
+        const relayFlag = relayPoint.map((e) => e.Relay);
+        const dataPoint = relayPoint.map((e) => e.Point);
+
         const PostData: PostDataSearch = {
             "userId": userId,
             "junkai": junkai,
@@ -58,7 +57,29 @@ const Desitination: NextPage = () => {
             "relay": relayFlag,
         }
         //fetch処理
-        router.push('/AddRoutePage')//DEBUG
+        try {
+            const res = await fetch(PostAstarUrl, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(PostData)
+            });
+
+            //resultにはJSONを解決したオブジェクトが入ってる
+            const result = await res.json();
+            console.log('result', result);
+            if ('succeeded' in result && result.succeeded === true || true) { //FIXME
+                setIsAfterRouteSearch(true);
+            } else {
+                //失敗しましたモーダル表示
+                alert('経路探索を失敗しました');
+            }
+
+        } catch (e) {
+            console.log('e', e);
+        }
+        // router.push('/AddRoutePage')//DEBUG
     }
     const onClickBack = () => {
         router.push('/CarMenu');
@@ -70,11 +91,35 @@ const Desitination: NextPage = () => {
         setRelayPoint([]);
     }
     const onChangePathOk = () => {
+
         setPathOk(!pathOk);
+    }
+    const RouteSave = () => {
+
+    }
+    const onClickBackPage = () => {
+
+        setIsAfterRouteSearch(false);
     }
 
 
-    return (
+    const afterButtons = (
+        <>
+            <CheckBoxForm name='junkai' id="junkai" onChange={() => setJunkai(!junkai)}>
+                巡回ルート
+            </CheckBoxForm>
+            <_BaseButton onClick={RouteSave} _class="button">
+                保存
+            </_BaseButton>
+            <_BaseButton onClick={onClickRouteSearch} _class="button">
+                経路探索
+            </_BaseButton>
+            <_BaseButton onClick={onClickBackPage} _class="button">
+                目的地選択に戻る
+            </_BaseButton>
+        </>
+    );
+    const beforeButtons = (
         <>
             <_BaseButton onClick={onClickRouteSearch} _class="button">
                 経路探索
@@ -94,6 +139,15 @@ const Desitination: NextPage = () => {
             <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
                 通行可能領域表示
             </CheckBoxForm>
+
+        </>
+    );
+
+    return (
+        <>
+            {
+                isAfterRouteSearch ? afterButtons : beforeButtons
+            }
             <DynamicMapNoSSR
                 setRelayPoint={setRelayPoint}
                 circle={viewCircle}
@@ -102,6 +156,8 @@ const Desitination: NextPage = () => {
                 setPoly={setPoly}
             />
         </>
-    )
+    );
+
+
 }
 export default Desitination;
