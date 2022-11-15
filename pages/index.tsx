@@ -15,8 +15,11 @@ const WelcomePage: NextPage = () => {
     const modal = useModal();
 
 
-    const onClickCarUse = async () => {
+    const onClickCarUse = async (e: React.MouseEvent<HTMLButtonElement>) => {
         //router.push('/CarMenu'); //DEBUG
+        const target = e.currentTarget;
+        target.disabled = true;
+        //await new Promise((r) => setTimeout(() => r(0), 10000));
         try {
             const res = await fetch(CreateUserUrl);
             const data = await res.json();
@@ -28,23 +31,34 @@ const WelcomePage: NextPage = () => {
 
                 router.push('/CarMenu');
             } else {
-                alert('ユーザーIDとれなかったよ')
+
+                modal.setContent(
+                    <>
+                        <p>ユーザーIDが取れませんでした</p>
+                        <button onClick={() => modal.close()}>閉じる</button>
+                    </>
+                )
+                modal.open();
             }
         } catch (e) {
+            modal.setContent(
+                <>
+                    <p>通信エラーです</p>
+                    <button onClick={() => modal.close()}>閉じる</button>
+                </>
+            )
+            modal.open();
             console.log('e', e);
+        } finally {
+            target.disabled = false;
         }
     }
     return (
         <>
             {
-                modal.content(
-                    <>
-                        <p>モーダル</p>
-                        <button onClick={() => modal.close()}>閉じる</button>
-                    </>
-                )
+                modal.show()
             }
-            <UserIdContext.Provider value={{ userId: 'ababaaba', setUserId: setUserId }}>
+            <UserIdContext.Provider value={{ userId, setUserId }}>
 
                 <_BaseButton onClick={onClickCarUse} _class='button'>
                     車をつかう
