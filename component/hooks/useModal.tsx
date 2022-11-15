@@ -1,7 +1,8 @@
 import React, { Children, useState } from "react";
 
-export const useModal = () => {
-    const [isShow, setShow] = useState<boolean>(true);
+export const useModal = (init: boolean = false) => {
+    const [isShow, setShow] = useState<boolean>(init);
+    const [content, setContent] = useState<React.ReactNode>(<></>);
 
     const open = () => {
         setShow(true);
@@ -10,17 +11,17 @@ export const useModal = () => {
         setShow(false);
     }
 
-    const content = (children: React.ReactNode) => {
+    const show = () => {
         return (
             isShow ?
-                <div className="modalContainer">
+                <div className="modalContainer" onClick={() => close()}>
                     <div className="modalBody">
-                        {children}
+                        {content}
                     </div>
                 </div>
                 :
                 null
         );
     }
-    return { isShow, open, close, content };
+    return { isShow, open, close, show, setContent };
 }
