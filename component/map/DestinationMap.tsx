@@ -8,15 +8,7 @@ import L from 'leaflet';
 const position = new LatLng(38.72311671577611, 141.0346841825174);
 const zoomlebel = 18;
 const path = { color: "green" }
-const icon = new L.Icon({
-    iconUrl: '/images/marker-icon.png',
-    iconRetinaUrl: '/images/marker-icon-2x.png',
-    shadowUrl: '/images/marker-shadow.png',
-    iconSize: [25, 41],
-    shadowSize: [41, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [0, 0]
-})
+
 
 interface Props {
     circle: LatLangRadius[];
@@ -43,29 +35,45 @@ const DesitinationMap: React.FC<Props> = ({
                 });
             },
         })
+
         console.log('relayPoint', relayPoint); //DEBUG
+        const markerMaker = () => relayPoint.map((elem, index) => {
+            if (!elem.Relay) {
+                const svgIcon = L.divIcon({
+                    html: `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 45" width="30" height="45" style="fill:rgba(0,0,0,0)">
+                    <g stroke="none" fill="blue">
+                        <path d="M 15 45 L 30 15 S 15 -15 0 15 L 15 45" />
+                    </g>
+                    <g fill="white" stroke="white" stroke-width="1">
+                        <text text-anchor="middle" x="15" y="25">${index + 1}</text>
+                    </g>
+                    </svg>`,
+                    iconSize: [30, 45],
+                    iconAnchor: [15, 45],
+                    popupAnchor: [0, 0],
+                    className: 'numberMarker'
+                });
+                return <Marker position={elem.Point}
+                    key={index}
+                    icon={svgIcon}
+                    eventHandlers={{
+                        contextmenu: (e) => {
+                            if (confirm('この目的地を削除しますか？')) {
+                                let index = relayPoint.indexOf({ Point: e.latlng, Relay: false });
+                                relayPoint.slice(index, 1);
+                                //ここで再描画
+
+                            }
+                        }
+                    }}
+                />
+            }
+        });
         return (
             <React.Fragment>
                 {
-
-                    relayPoint.map((elem, index) =>
-                        elem.Relay ? <></> :
-                            <Marker
-                                position={elem.Point}
-                                key={index}
-                                icon={icon}
-                                eventHandlers={{
-                                    contextmenu: (e) => {
-                                        if (confirm('この目的地を削除しますか？')) {
-                                            let index = relayPoint.indexOf({ Point: e.latlng, Relay: false });
-                                            relayPoint.slice(index, 1);
-                                            //ここで再描画
-
-                                        }
-                                    }
-                                }}
-                            ></Marker>
-                    )
+                    markerMaker()
                 }
             </React.Fragment>
         )

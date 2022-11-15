@@ -9,3 +9,7 @@
   width: 90vw;
   height: 90vh;
 }
+
+.numberMarker {
+  background: rgba(0, 0, 0, 0);
+}
