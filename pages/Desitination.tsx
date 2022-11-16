@@ -38,6 +38,14 @@ interface Response {
     succeeded: boolean,
     passableInfo?: LatLangRadiusID[]
 }
+interface PostRoute {
+    userId: string,
+    data: LatLng[]
+}
+interface PostRouteResponse {
+    succeeded: boolean,
+    route: LatLng[]
+}
 const PostAstarUrl = 'http://saza.kohga.local:3001/astar';
 const PostOkRouteUrl = 'http://saza.kohga.local:3001/reqPassable';
 
@@ -62,6 +70,7 @@ const Desitination: NextPage = () => {
     const PostUserId: Request = {
         userId: userId
     }
+
     useEffect(() => {
         console.log('userId', userId);
         if (userId === '') {
@@ -76,50 +85,59 @@ const Desitination: NextPage = () => {
 
     }, [])
 
-    const onClickRouteSearch = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        const relayFlag = relayPoint.map((e) => e.Relay);
-        const dataPoint = relayPoint.map((e) => e.Point)
+    const onClickRouteSearch = async () => {
+        if (relayPoint.length === 0) return;
+        if (junkai) {
+            relayPoint.push(relayPoint[0]);
+        }
+        const internalRelayPoint = relayPoint.map((e) => e);
+        const points = [[(internalRelayPoint.shift() as relayPoint).Point]];
+        const temp: LatLng[] = [];
+        for (const elem of internalRelayPoint) {
+            if (temp.length === 0) {
+                temp.push(points.at(-1)?.at(-1) as LatLng);
+            }
+            temp.push(elem.Point);
+            if (!elem.Relay) {
+                points.push(temp.map(e => e));
+                temp.length = 0;
+            }
+        }
+        void points.shift();
+        console.log('points', points);
 
-        const PostData: PostDataSearch = {
-            "userId": userId,
-            "junkai": junkai,
-            "data": dataPoint,
-            "relay": relayFlag,
-        };
-        const target = e.currentTarget;
-        target.disabled = true;
-
-        //fetch処理
-        try {
-            await new Promise((r) => setTimeout(() => r(0), 10000));
-            const res = await fetch(PostAstarUrl, {
+        const promises: Promise<globalThis.Response>[] = [];
+        for (const elem of points) {
+            const PostRouteData: PostRoute = {
+                userId: userId,
+                data: elem
+            };
+            const resPromise = fetch(PostAstarUrl, {
                 method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify(PostData)
+                body: JSON.stringify(PostRouteData)
             });
-
-            //resultにはJSONを解決したオブジェクトが入ってる
-            const result = await res.json();
-            console.log('result', result);
-
-            if ('succeeded' in result && result.succeeded === true) {
-                setPoly(result.route);
-                setIsAfterRouteSearch(true);
-
-            } else {
-                //失敗しましたモーダル表示
-                alert('経路探索を失敗しました');
-            }
-
-        } catch (e) {
-            console.log('e', e);
-        } finally {
-            target.disabled = false;
+            promises.push(resPromise);
         }
-
-
+        try {
+            const results = await Promise.all(promises);
+            const prepoly: LatLng[][] = [];
+            for (const elem of results) {
+                const result: PostRouteResponse = await elem.json();
+                if (result.succeeded === true) {
+                    prepoly.push(result.route);
+                } else {
+                    throw new Error('経路探索に失敗しました');
+                }
+            }
+            console.log('prepoly', prepoly);
+            setPoly(prepoly);
+            setIsAfterRouteSearch(true);
+        } catch (e) {
+            console.log(e);
+        }
     }
     const onClickBack = () => {
         router.push('/CarMenu');
@@ -129,7 +147,7 @@ const Desitination: NextPage = () => {
     }
     const onClickRouteReset = () => {
         setRelayPoint([]);
-        setPoly([[]]);
+        setPoly([]);
     }
     const onChangePathOk = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const checked = e.currentTarget.checked;
@@ -174,6 +192,9 @@ const Desitination: NextPage = () => {
 
         setIsAfterRouteSearch(false);
     }
+    const onClickJunkai = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setJunkai(e.currentTarget.checked);
+    }
 
 
     const afterButtons = (
@@ -206,7 +227,7 @@ const Desitination: NextPage = () => {
             <_BaseButton onClick={onClickRouteReset} _class="button">
                 目的地リセット
             </_BaseButton>
-            <CheckBoxForm name="junkai" id="junkai" onChange={() => setJunkai(!junkai)}>
+            <CheckBoxForm name="junkai" id="junkai" onChange={onClickJunkai}>
                 巡回ルート
             </CheckBoxForm>
             <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
