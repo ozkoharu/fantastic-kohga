@@ -1,32 +1,91 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { Url } from "url";
 
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
+import { useModal } from "../component/hooks/useModal";
 import { UserIdContext } from "./_app";
+
+const CarUseCheckUrl = 'http://saza.kohga.local:3001/isAcceptable';
+const EndPageUrl = 'http://saza.kohga.local:3001/terminate';
+
+interface Request {
+    userId: string
+}
+interface Response {
+    succeeded: boolean,
+    reason?: string,
+}
+
+
 
 const CarMenu: NextPage = () => {
     const router = useRouter();
-    const { userId } = useContext(UserIdContext);
-    const onClickDesitination = () => {
-        router.push('/Desitination');
-    }
-    const onClickExistsRoute = () => {
+    const modal = useModal();
+    const { userId, setUserId } = useContext(UserIdContext);
+    const PostData: Request = { userId: userId };
 
-    }
+    useEffect(() => {
+        if (userId === '') {
+            modal.setModalHander(() => router.push('/'));
+            modal.setContent(
+                <>
+                    <h1>チートは辞めてください</h1>
+                </>
+            )
+            modal.open();
+        }
+    }, [])
+
+    const onClickGenerator = (url: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const target = e.currentTarget;
+        target.disabled = true;
+        try {
+            const res = await fetch(CarUseCheckUrl, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(PostData)
+            });
+            const result = await res.json() as Response;
+            if (result.succeeded) {
+                router.push(url);
+            } else {
+                modal.setContent(
+                    <>
+                        <p>受け付けられません</p>
+                    </>
+                )
+            }
+        } catch (e) {
+            modal.setContent(
+                <>
+                    <p>通信エラー</p>
+                </>
+            )
+            console.log(e);
+            modal.open();
+        } finally {
+            target.disabled = false;
+
+        }
+    };
+    const onClickDesitination = onClickGenerator('/Desitination')
+
+    const onClickExistsRoute = onClickGenerator('/ExistsRoute')
     const onClickCarWatch = () => {
+        router.push('/CarWatch');
+    }
+    const onClickEndPage = onClickGenerator('/EndPage');
 
-    }
-    const onClickEndPage = () => {
-        router.push('/EndPage');
-    }
-    const onClickJunkai = () => {
-
-    }
-    console.log('CarMenu_userId', userId);
     return (
         <>
+            {
+                modal.show()
+            }
             <_BaseButton onClick={onClickDesitination} _class="button">
                 新規ルート作成
             </_BaseButton>

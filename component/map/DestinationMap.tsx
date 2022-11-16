@@ -85,7 +85,7 @@ const DesitinationMap: React.FC<Props> = ({
                 {
                     circle.map((elem, index) =>
                         <Circle
-                            center={elem.Position}
+                            center={elem.position}
                             pathOptions={{ fillColor: "blue" }}
                             radius={elem.radius}
                             key={index}

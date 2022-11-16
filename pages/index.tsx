@@ -9,9 +9,7 @@ const CreateUserUrl = 'http://saza.kohga.local:3001/createuser';
 
 const WelcomePage: NextPage = () => {
     const router = useRouter();
-    const [isopen, setIsOpne] = useState(true);
     const { userId, setUserId } = useContext(UserIdContext);
-    const modalRef = useRef<HTMLUListElement>(null);
     const modal = useModal();
 
 
@@ -35,7 +33,6 @@ const WelcomePage: NextPage = () => {
                 modal.setContent(
                     <>
                         <p>ユーザーIDが取れませんでした</p>
-                        <button onClick={() => modal.close()}>閉じる</button>
                     </>
                 )
                 modal.open();
@@ -44,7 +41,6 @@ const WelcomePage: NextPage = () => {
             modal.setContent(
                 <>
                     <p>通信エラーです</p>
-                    <button onClick={() => modal.close()}>閉じる</button>
                 </>
             )
             modal.open();
