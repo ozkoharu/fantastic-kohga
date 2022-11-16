@@ -1,8 +1,9 @@
-import React, { Children, useState } from "react";
+import React, { Children, useRef, useState } from "react";
 
-export const useModal = (init: boolean = false) => {
-    const [isShow, setShow] = useState<boolean>(init);
+export const useModal = () => {
+    const [isShow, setShow] = useState<boolean>(false);
     const [content, setContent] = useState<React.ReactNode>(<></>);
+
 
     const open = () => {
         setShow(true);
@@ -11,17 +12,23 @@ export const useModal = (init: boolean = false) => {
         setShow(false);
     }
 
+    const modalHandler = useRef<() => void>(() => close());
+    const setModalHander = (f: () => void) => modalHandler.current = f;
+
     const show = () => {
         return (
             isShow ?
-                <div className="modalContainer" onClick={() => close()}>
+                <div className="modalContainer" onClick={() => modalHandler.current()}>
                     <div className="modalBody">
                         {content}
+                        <div>
+                            <button onClick={() => modalHandler.current()}>閉じる</button>
+                        </div>
                     </div>
                 </div>
                 :
                 null
         );
     }
-    return { isShow, open, close, show, setContent };
+    return { isShow, open, close, show, setContent, setModalHander };
 }
