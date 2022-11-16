@@ -38,12 +38,14 @@ const CarMenu: NextPage = () => {
             modal.open();
         }
     }, [])
+    const autoEnd = async (e: BeforeUnloadEvent) => e.returnValue = "";
+    useEffect(() => window.addEventListener('beforeunload', autoEnd), []);
 
-    const onClickGenerator = (url: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const onClickGenerator = (url: string, postUrl: string) => async (e: React.MouseEvent<HTMLButtonElement>) => {
         const target = e.currentTarget;
         target.disabled = true;
         try {
-            const res = await fetch(CarUseCheckUrl, {
+            const res = await fetch(postUrl, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -73,13 +75,17 @@ const CarMenu: NextPage = () => {
 
         }
     };
-    const onClickDesitination = onClickGenerator('/Desitination')
+    const onClickDesitination = onClickGenerator('/Desitination', CarUseCheckUrl)
 
-    const onClickExistsRoute = onClickGenerator('/ExistsRoute')
+    const onClickExistsRoute = onClickGenerator('/ExistsRoute', CarUseCheckUrl)
     const onClickCarWatch = () => {
         router.push('/CarWatch');
     }
-    const onClickEndPage = onClickGenerator('/EndPage');
+    const onClickEndPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+        window.removeEventListener('beforeunload', autoEnd);
+        const onClickEndPageInternal = onClickGenerator('/EndPage', EndPageUrl)
+        onClickEndPageInternal(e);
+    }
 
     return (
         <>
