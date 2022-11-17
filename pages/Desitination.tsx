@@ -87,10 +87,10 @@ const Desitination: NextPage = () => {
 
     const onClickRouteSearch = async () => {
         if (relayPoint.length === 0) return;
-        if (junkai) {
-            relayPoint.push(relayPoint[0]);
-        }
         const internalRelayPoint = relayPoint.map((e) => e);
+        if (junkai) {
+            internalRelayPoint.push(relayPoint[0]);
+        }
         const points = [[(internalRelayPoint.shift() as relayPoint).Point]];
         const temp: LatLng[] = [];
         for (const elem of internalRelayPoint) {
