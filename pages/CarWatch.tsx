@@ -9,7 +9,7 @@ const CarWatch: NextPage = () => {
 
     return (
         <>
-            <h1>車を見るページ</h1>
+
         </>
     )
 }

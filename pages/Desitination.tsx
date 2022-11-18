@@ -46,8 +46,18 @@ interface PostRouteResponse {
     succeeded: boolean,
     route: LatLng[]
 }
+interface PostRouting {
+    userId: string,
+    data: LatLng[][],
+    junkai: boolean
+}
+interface resRouting {
+    succeeded: boolean,
+    message?: string,
+}
 const PostAstarUrl = 'http://saza.kohga.local:3001/astar';
 const PostOkRouteUrl = 'http://saza.kohga.local:3001/reqPassable';
+const PostRoutingUrl = 'http://saza.kohga.local:3001/execRoute';
 
 export const DynamicMapNoSSR = dynamic(() => {
     return (
@@ -66,6 +76,8 @@ const Desitination: NextPage = () => {
     const [poly, setPoly] = useState<LatLng[][]>([[]]);
     const [junkai, setJunkai] = useState<boolean>(false);
     const [isAfterRouteSearch, setIsAfterRouteSearch] = useState<boolean>(false);
+    const [isRouting, setIsRouting] = useState<boolean>(false);
+    const [middleFlag, setMiddleFlag] = useState<number>(-1);
     const router = useRouter();
     const PostUserId: Request = {
         userId: userId
@@ -84,9 +96,22 @@ const Desitination: NextPage = () => {
         }
 
     }, [])
+    const allButtons = (disabled: boolean) => {
+        (document.getElementById('saveButton') as HTMLButtonElement).disabled = disabled;
+        (document.getElementById('backButton') as HTMLButtonElement).disabled = disabled;
+        (document.getElementById('routingButton') as HTMLButtonElement).disabled = disabled;
+        (document.getElementById('junkai') as HTMLInputElement).disabled = disabled;
+        const middlebutton = document.getElementById('middleButton');
+        if (middlebutton !== null) {
+            (middlebutton as HTMLButtonElement).disabled = disabled;
+        }
+    }
 
-    const onClickRouteSearch = async () => {
+    const onClickRouteSearch = async (e: React.MouseEvent<HTMLButtonElement>) => {
         if (relayPoint.length === 0) return;
+        const target = e ? e.currentTarget : null;
+        target && (target.disabled = true);
+
         const internalRelayPoint = relayPoint.map((e) => e);
         if (junkai) {
             internalRelayPoint.push(relayPoint[0]);
@@ -136,7 +161,15 @@ const Desitination: NextPage = () => {
             setPoly(prepoly);
             setIsAfterRouteSearch(true);
         } catch (e) {
+            modal.setContent(
+                <>
+                    <h1>経路探索に失敗しました</h1>
+                </>
+            )
+            modal.open();
             console.log(e);
+        } finally {
+            target && (target.disabled = false);
         }
     }
     const onClickBack = () => {
@@ -189,28 +222,85 @@ const Desitination: NextPage = () => {
 
     }
     const onClickBackPage = () => {
-
+        setPoly([]);
+        setRelayPoint(relayPoint.reduce((previous, current) => {
+            if (!current.Relay) {
+                previous.push(current);
+            }
+            return previous;
+        }, [] as relayPoint[]))
         setIsAfterRouteSearch(false);
     }
     const onClickJunkai = (e: React.ChangeEvent<HTMLInputElement>) => {
         setJunkai(e.currentTarget.checked);
     }
+    const routing = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        //ボタンが押されて経路情報が入っていたらPOST
+        const PostRoutingData: PostRouting = {
+            userId: userId,
+            data: poly,
+            junkai: junkai,
+        }
+        const target = e.currentTarget;
+        target.disabled = true;
+        try {
+            if (poly !== undefined) {
+                const res = await fetch(PostRoutingUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(PostRoutingData)
+                });
+                const result = await res.json() as resRouting;
+                console.log('result.message', result.message);
+                console.log('result.succeeded', result.succeeded);
+                setIsRouting(result.succeeded);
+            } else {
+                modal.setContent(
+                    <>
+                        <h1>経路を入力してください</h1>
+                    </>
+                );
+            }
+
+        } catch (e) {
+            modal.setContent(
+                <>
+                    <h1>通信エラー</h1>
+                </>
+            )
+        } finally {
+            if (isRouting) router.push('/CarWatch');
+            target.disabled = false;
+        }
+    }
+    const onClickMiddlePoint = async () => {
+        allButtons(true);
+        console.log('relayPoint', relayPoint);
+        await onClickRouteSearch(null as unknown as React.MouseEvent<HTMLButtonElement>);
+        allButtons(false);
+        setMiddleFlag(-1);
+    }
 
 
     const afterButtons = (
         <>
+            {
+                middleFlag === -1 ? null : <_BaseButton onClick={onClickMiddlePoint} _class="button" id="middleButton">中継点確定</_BaseButton>
+            }
+            <_BaseButton onClick={RouteSave} _class="button" id="saveButton">
+                保存
+            </_BaseButton>
+            <_BaseButton onClick={onClickBackPage} _class="button" id="backButton">
+                目的地選択に戻る
+            </_BaseButton>
+            <_BaseButton onClick={routing} _class="button" id="routingButton">
+                この経路で車を動かす
+            </_BaseButton>
             <CheckBoxForm name='junkai' id="junkai" onChange={() => setJunkai(!junkai)}>
                 巡回ルート
             </CheckBoxForm>
-            <_BaseButton onClick={RouteSave} _class="button">
-                保存
-            </_BaseButton>
-            <_BaseButton onClick={onClickRouteSearch} _class="button">
-                経路探索
-            </_BaseButton>
-            <_BaseButton onClick={onClickBackPage} _class="button">
-                目的地選択に戻る
-            </_BaseButton>
         </>
     );
     const beforeButtons = (
@@ -251,6 +341,12 @@ const Desitination: NextPage = () => {
                 relayPoint={relayPoint}
                 poly={poly}
                 setPoly={setPoly}
+                isAfterRouteSearch={isAfterRouteSearch}
+                onClickRouteSearch={onClickRouteSearch}
+                modal={modal}
+                allButtons={allButtons}
+                middleFlag={middleFlag}
+                setMiddleFlag={setMiddleFlag}
             />
         </>
     );

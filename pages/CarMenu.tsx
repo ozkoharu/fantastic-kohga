@@ -87,6 +87,28 @@ const CarMenu: NextPage = () => {
         onClickEndPageInternal(e);
     }
 
+    const AsyncModal = (valueGenerator: (r: (arg0: any) => void) => React.SetStateAction<React.ReactNode>) => new Promise<any>((r) => {
+        modal.setContent(valueGenerator(r));
+        modal.setModalHander(() => {
+            modal.close();
+            r(false);
+        });
+        modal.open();
+    })
+
+    const test = async () => {
+        const result = await AsyncModal((r) =>
+            <>
+                <h1>hoge</h1>
+                <button onClick={() => {
+                    modal.close();
+                    r(true);
+                }}>OK</button>
+            </>);
+        console.log('after hoge', result);
+    }
+
+
     return (
         <>
             {
@@ -104,6 +126,7 @@ const CarMenu: NextPage = () => {
             <_BaseButton onClick={onClickEndPage} _class="button">
                 終わり
             </_BaseButton>
+            <_BaseButton onClick={test}>test</_BaseButton>
 
         </>
     )
