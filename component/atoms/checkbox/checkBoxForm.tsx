@@ -5,6 +5,7 @@ interface Props {
     id?: string;
     onChange?: (e: any) => void;
     children?: React.ReactNode;
+    disabled?: boolean
 }
 
 export const CheckBoxForm: React.FC<Props> = ({
@@ -12,10 +13,11 @@ export const CheckBoxForm: React.FC<Props> = ({
     id,
     onChange,
     children,
+    disabled,
 }) => {
     return (
         <>
-            <input type={"checkbox"} onChange={onChange} id={id} name={name} />
+            <input type={"checkbox"} onChange={onChange} id={id} name={name} disabled={disabled} />
             <label htmlFor={id}>{children}</label>
         </>
     )

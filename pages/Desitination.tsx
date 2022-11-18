@@ -97,17 +97,28 @@ const Desitination: NextPage = () => {
 
     }, [])
     const allButtons = (disabled: boolean) => {
-        (document.getElementById('saveButton') as HTMLButtonElement).disabled = disabled;
-        (document.getElementById('backButton') as HTMLButtonElement).disabled = disabled;
-        (document.getElementById('routingButton') as HTMLButtonElement).disabled = disabled;
-        (document.getElementById('junkai') as HTMLInputElement).disabled = disabled;
-        const middlebutton = document.getElementById('middleButton');
-        if (middlebutton !== null) {
-            (middlebutton as HTMLButtonElement).disabled = disabled;
+        if (isAfterRouteSearch) {
+            (document.getElementById('saveButton') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('backButton') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('routingButton') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('junkai') as HTMLInputElement).disabled = disabled;
+
+            const middlebutton = document.getElementById('middleButton');
+            if (middlebutton !== null) {
+                (middlebutton as HTMLButtonElement).disabled = disabled;
+            }
+        } else {
+            (document.getElementById('beforeRouteSearch') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('beforeTurtial') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('beforeReset') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('beforeBack') as HTMLButtonElement).disabled = disabled;
+            (document.getElementById('beforejunkai') as HTMLInputElement).disabled = disabled;
         }
+
     }
 
     const onClickRouteSearch = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        allButtons(true);
         if (relayPoint.length === 0) return;
         const target = e ? e.currentTarget : null;
         target && (target.disabled = true);
@@ -169,6 +180,7 @@ const Desitination: NextPage = () => {
             modal.open();
             console.log(e);
         } finally {
+            allButtons(false);
             target && (target.disabled = false);
         }
     }
@@ -241,29 +253,25 @@ const Desitination: NextPage = () => {
             data: poly,
             junkai: junkai,
         }
+        console.log(PostRoutingData);
         const target = e.currentTarget;
         target.disabled = true;
         try {
-            if (poly !== undefined) {
-                const res = await fetch(PostRoutingUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(PostRoutingData)
-                });
-                const result = await res.json() as resRouting;
-                console.log('result.message', result.message);
-                console.log('result.succeeded', result.succeeded);
+
+            const res = await fetch(PostRoutingUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(PostRoutingData)
+            });
+            const result = await res.json() as resRouting;
+            if (result.succeeded) {
                 setIsRouting(result.succeeded);
             } else {
-                modal.setContent(
-                    <>
-                        <h1>経路を入力してください</h1>
-                    </>
-                );
+                console.log('result.message', result.message);
             }
-
+            console.log('result.succeeded', result.succeeded);
         } catch (e) {
             modal.setContent(
                 <>
@@ -278,6 +286,16 @@ const Desitination: NextPage = () => {
     const onClickMiddlePoint = async () => {
         allButtons(true);
         console.log('relayPoint', relayPoint);
+        const { headTrue } = relayPoint.reduce((prev, cur) => {
+            if (prev.ishead && cur.Relay) {
+                prev.headTrue.push(cur);
+            } else {
+                prev.ishead = false;
+            }
+            return prev;
+        }, { ishead: true, headTrue: [] as relayPoint[] });
+        relayPoint.splice(0, headTrue.length);
+        relayPoint.push(...headTrue);
         await onClickRouteSearch(null as unknown as React.MouseEvent<HTMLButtonElement>);
         allButtons(false);
         setMiddleFlag(-1);
@@ -292,38 +310,40 @@ const Desitination: NextPage = () => {
             <_BaseButton onClick={RouteSave} _class="button" id="saveButton">
                 保存
             </_BaseButton>
-            <_BaseButton onClick={onClickBackPage} _class="button" id="backButton">
-                目的地選択に戻る
-            </_BaseButton>
             <_BaseButton onClick={routing} _class="button" id="routingButton">
                 この経路で車を動かす
             </_BaseButton>
-            <CheckBoxForm name='junkai' id="junkai" onChange={() => setJunkai(!junkai)}>
-                巡回ルート
-            </CheckBoxForm>
-        </>
-    );
-    const beforeButtons = (
-        <>
-            <_BaseButton onClick={onClickRouteSearch} _class="button">
-                経路探索
+            <_BaseButton onClick={onClickBackPage} _class="button" id="backButton">
+                目的地選択に戻る
             </_BaseButton>
-            <_BaseButton onClick={onClickBack} _class="button">
-                戻る
-            </_BaseButton>
-            <_BaseButton onClick={onClickTurtial} _class="button">
-                チュートリアルを開く
-            </_BaseButton>
-            <_BaseButton onClick={onClickRouteReset} _class="button">
-                目的地リセット
-            </_BaseButton>
-            <CheckBoxForm name="junkai" id="junkai" onChange={onClickJunkai}>
+            <CheckBoxForm name="junkai" id="junkai" onChange={onClickJunkai} disabled={true}>
                 巡回ルート
             </CheckBoxForm>
             <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
                 通行可能領域表示
             </CheckBoxForm>
-
+        </>
+    );
+    const beforeButtons = (
+        <>
+            <_BaseButton onClick={onClickRouteSearch} _class="button" id="beforeRouteSearch">
+                経路探索
+            </_BaseButton>
+            <_BaseButton onClick={onClickTurtial} _class="button" id="beforeTurtial">
+                チュートリアルを開く
+            </_BaseButton>
+            <_BaseButton onClick={onClickRouteReset} _class="button" id="beforeReset">
+                目的地リセット
+            </_BaseButton>
+            <_BaseButton onClick={onClickBack} _class="button" id="beforeBack">
+                戻る
+            </_BaseButton>
+            <CheckBoxForm name="beforejunkai" id="beforejunkai" onChange={onClickJunkai} >
+                巡回ルート
+            </CheckBoxForm>
+            <CheckBoxForm name="beforepathOk" id="beforepathOk" onChange={onChangePathOk}>
+                通行可能領域表示
+            </CheckBoxForm>
         </>
     );
 

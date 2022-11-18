@@ -126,8 +126,6 @@ const CarMenu: NextPage = () => {
             <_BaseButton onClick={onClickEndPage} _class="button">
                 終わり
             </_BaseButton>
-            <_BaseButton onClick={test}>test</_BaseButton>
-
         </>
     )
 }
