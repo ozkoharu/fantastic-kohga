@@ -92,7 +92,6 @@ const DesitinationMap: React.FC<Props> = ({
                     popupAnchor: [0, 0],
                     className: 'numberMarker'
                 });
-                console.log('marker');
                 return <Marker
                     position={elem.Point}
                     key={index}
