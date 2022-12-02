@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
-import BaseTextForm from "../component/atoms/inputform/BaseTextForm";
 import { useModal } from "../component/hooks/useModal";
 import { AdminIdContext } from "./_app";
 
