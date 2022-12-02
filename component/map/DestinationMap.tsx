@@ -168,7 +168,7 @@ const DesitinationMap: React.FC<Props> = ({
                 {
                     poly.map((elem, index) =>
                         <Polyline
-                            weight={10}
+                            weight={5}
                             pathOptions={path}
                             positions={elem}
                             key={index}
