@@ -7,6 +7,7 @@ import { circle, LatLng } from "leaflet";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { UserIdContext } from "./_app";
 import { useModal } from "../component/hooks/useModal";
+import BaseTextForm from "../component/atoms/inputform/BaseTextForm";
 
 
 
@@ -55,9 +56,20 @@ interface resRouting {
     succeeded: boolean,
     message?: string,
 }
+interface postRouteSave {
+    userId: string,
+    routeName: string,
+    data: LatLng[][],
+    junkai: boolean,
+}
+interface reqRouteSave {
+    succeeded: boolean,
+    routeName?: string,
+}
 const PostAstarUrl = 'http://saza.kohga.local:3001/astar';
 const PostOkRouteUrl = 'http://saza.kohga.local:3001/reqPassable';
 const PostRoutingUrl = 'http://saza.kohga.local:3001/execRoute';
+const PostRouteSaveUrl = 'http://saza.kohga.local:3001/saveRoute';
 
 export const DynamicMapNoSSR = dynamic(() => {
     return (
@@ -76,7 +88,6 @@ const Desitination: NextPage = () => {
     const [poly, setPoly] = useState<LatLng[][]>([[]]);
     const [junkai, setJunkai] = useState<boolean>(false);
     const [isAfterRouteSearch, setIsAfterRouteSearch] = useState<boolean>(false);
-    const [isRouting, setIsRouting] = useState<boolean>(false);
     const [middleFlag, setMiddleFlag] = useState<number>(-1);
     const router = useRouter();
     const PostUserId: Request = {
@@ -95,7 +106,12 @@ const Desitination: NextPage = () => {
             modal.open();
         }
 
+    }, []);
+
+    useEffect(() => {
+        document.getElementById('beforepathOk')?.click();
     }, [])
+
     const allButtons = (disabled: boolean) => {
         if (isAfterRouteSearch) {
             (document.getElementById('saveButton') as HTMLButtonElement).disabled = disabled;
@@ -118,10 +134,16 @@ const Desitination: NextPage = () => {
     }
 
     const onClickRouteSearch = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (relayPoint.length === 0) {
+            modal.setContent(
+                <>
+                    <p>少なとも一つの目的地を選択してください</p>
+                </>
+            )
+            modal.open();
+            return;
+        }
         allButtons(true);
-        if (relayPoint.length === 0) return;
-        const target = e ? e.currentTarget : null;
-        target && (target.disabled = true);
 
         const internalRelayPoint = relayPoint.map((e) => e);
         if (junkai) {
@@ -181,7 +203,6 @@ const Desitination: NextPage = () => {
             console.log(e);
         } finally {
             allButtons(false);
-            target && (target.disabled = false);
         }
     }
     const onClickBack = () => {
@@ -230,9 +251,90 @@ const Desitination: NextPage = () => {
         }
         setViewCircle(passableinfo);
     }
-    const RouteSave = () => {
 
+    const AsyncModal = (valueGenerator: (r: (arg0: any) => void) => React.SetStateAction<React.ReactNode>) => new Promise<any>((r) => {
+        modal.setContent(valueGenerator(r));
+        modal.setModalHander(() => {
+            modal.close();
+            r(false);
+        });
+        modal.open();
+    })
+
+    const RouteSave = async () => {
+        const pathname = await (async () => {
+            while (1) {
+                const pathname = await AsyncModal((r) =>
+                    <>
+                        <p>経路名を入力してください</p>
+                        <div>
+                            <input type="text" id="pathname" required />
+                            <button onClick={() => {
+                                r((document.getElementById('pathname') as HTMLInputElement).value);
+                                modal.close();
+                            }}>OK</button>
+                        </div>
+
+                    </>
+                );
+                if (pathname === false) return false;
+                if (pathname === '') continue;
+                const issave = await AsyncModal((r) =>
+                    <>
+                        <p>{pathname}</p>
+                        <p>これで保存していいですか</p>
+                        <button onClick={() => {
+                            modal.close();
+                            r(true);
+                        }}>OK</button>
+                    </>
+                );
+                if (issave) return pathname;
+            }
+        })();
+        console.log('pathname', pathname);
+        if (pathname === false) return;
+        const PostRouteSave: postRouteSave = {
+            userId: userId,
+            routeName: pathname,
+            data: poly,
+            junkai: junkai,
+        };
+
+        try {
+            const res = await fetch(PostRouteSaveUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(PostRouteSave)
+            });
+            const result = await res.json() as reqRouteSave;
+            if (result.succeeded) {
+                modal.setContent(
+                    <>
+                        <p>{result.routeName}</p>
+                        <p>保存できました</p>
+                    </>
+                )
+                modal.open();
+            } else {
+                modal.setContent(
+                    <>
+                        <p>経路が保存できませんでした<br />経路を選び直しもう一度経路探索してください</p>
+                    </>
+                )
+                modal.open();
+            }
+        } catch {
+            modal.setContent(
+                <>
+                    <p>通信エラー</p>
+                </>
+            )
+        }
     }
+
     const onClickBackPage = () => {
         setPoly([]);
         setRelayPoint(relayPoint.reduce((previous, current) => {
@@ -243,9 +345,11 @@ const Desitination: NextPage = () => {
         }, [] as relayPoint[]))
         setIsAfterRouteSearch(false);
     }
+
     const onClickJunkai = (e: React.ChangeEvent<HTMLInputElement>) => {
         setJunkai(e.currentTarget.checked);
     }
+
     const routing = async (e: React.MouseEvent<HTMLButtonElement>) => {
         //ボタンが押されて経路情報が入っていたらPOST
         const PostRoutingData: PostRouting = {
@@ -267,9 +371,14 @@ const Desitination: NextPage = () => {
             });
             const result = await res.json() as resRouting;
             if (result.succeeded) {
-                setIsRouting(result.succeeded);
+                router.push('/CarWatch');
             } else {
                 console.log('result.message', result.message);
+                modal.setContent(
+                    <>
+                        <p>失敗しました</p>
+                    </>
+                )
             }
             console.log('result.succeeded', result.succeeded);
         } catch (e) {
@@ -279,7 +388,6 @@ const Desitination: NextPage = () => {
                 </>
             )
         } finally {
-            if (isRouting) router.push('/CarWatch');
             target.disabled = false;
         }
     }
@@ -370,7 +478,5 @@ const Desitination: NextPage = () => {
             />
         </>
     );
-
-
 }
 export default Desitination;

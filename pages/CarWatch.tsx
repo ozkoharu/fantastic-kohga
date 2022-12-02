@@ -210,7 +210,7 @@ const CarWatch: NextPage = () => {
             });
             const result = await res.json() as ResEndRoute;
             if (result.succeeded) {
-                clearTimeout(timerId);
+                clearTimeout(timerId); //ここ動いてる？
                 router.push('/CarMenu');
                 return;
             } else {

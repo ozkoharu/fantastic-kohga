@@ -1,4 +1,5 @@
 import { LatLng } from "leaflet";
+import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
@@ -40,7 +41,7 @@ const PostReqRouteNameUrl = 'http://saza.kohga.local:3001/routeName';
 const PostPathRoutingUrl = 'http://saza.kohga.local:3001/execRoute';
 
 
-const ExistsPage = () => {
+const ExistsPage: NextPage = () => {
     const router = useRouter();
     const modal = useModal();
     const { userId, setUserId } = useContext(UserIdContext);

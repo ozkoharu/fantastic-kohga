@@ -15,11 +15,16 @@ export const useModal = () => {
     const modalHandler = useRef<() => void>(() => close());
     const setModalHander = (f: () => void) => modalHandler.current = f;
 
+    const modalBodyHandler = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     const show = () => {
         return (
             isShow ?
                 <div className="modalContainer" onClick={() => modalHandler.current()}>
-                    <div className="modalBody">
+                    <div className="modalBody" onClick={modalBodyHandler}>
                         {content}
                         <div>
                             <button onClick={() => modalHandler.current()}>閉じる</button>
