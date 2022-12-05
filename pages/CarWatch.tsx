@@ -20,6 +20,8 @@ interface ResMonitorCarData {
     nowPoint?: LatLng,
     battery?: number,
     status?: boolean,
+    arrange?: boolean,
+    reserve?: boolean,
 }
 interface ReqProceedRouteData {
     userId: string,
@@ -55,7 +57,11 @@ const CarWatch: NextPage = () => {
     const [dest, setDest] = useState<LatLng[]>([]);
     const [battery, setBattery] = useState<number>(0);
     const [timerId, setTimerId] = useState<NodeJS.Timeout>();
-
+    const [arrival, setArrival] = useState<boolean>(false);
+    const [finish, setFinish] = useState<boolean>(false);
+    const [reserve, setReserve] = useState<boolean>(false);
+    const [arrange, setArrange] = useState<boolean>(false);
+    const [status, setStatus] = useState<boolean>(false);
 
     const AsyncModal = (valueGenerator: (r: (arg0: any) => void) => React.SetStateAction<React.ReactNode>) => new Promise<any>((r) => {
         modal.setContent(valueGenerator(r));
@@ -89,18 +95,17 @@ const CarWatch: NextPage = () => {
                 if (result.route !== undefined) setPoly(result.route);
                 if (result.dest !== undefined) setDest(result.dest);
                 if (result.battery !== undefined) setBattery(result.battery);
-                console.log('result route', result.route);
-                console.log('result dest', result.dest);
-                console.log('result battery', result.battery);
-                console.log('result arrival', result.arrival);
-                console.log('result finish', result.finish);
-                console.log('result',)
-                if (result.status) {
+                if (result.finish !== undefined) setFinish(result.finish);
+                if (result.arrival !== undefined) setArrival(result.arrival);
+                if (result.arrange !== undefined) setArrange(result.arrange);
+                if (result.reserve !== undefined) setReserve(result.reserve);
+
+                if (!result.status) {
                     modal.setContent(
                         <>
                             <p>車が死にました</p>
                         </>
-                    )
+                    );
                     modal.open();
                     return;
                 }
@@ -109,12 +114,12 @@ const CarWatch: NextPage = () => {
                     <>
                         <p>firstpost失敗</p>
                     </>
-                )
+                );
                 modal.open();
             }
         } catch (e) { } finally {
             console.log('settimeout');
-            setTimerId(setTimeout(firstPost, 1000));
+            setTimerId(setTimeout(firstPost, 10000));
         }
     }
 
@@ -230,7 +235,6 @@ const CarWatch: NextPage = () => {
         } finally {
             firstPost();
         }
-
     }
 
     const onClickCarMenu = () => {
