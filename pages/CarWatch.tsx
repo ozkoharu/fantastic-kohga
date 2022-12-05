@@ -116,11 +116,11 @@ const CarWatch: NextPage = () => {
                     </>
                 );
                 modal.open();
+                return;
             }
-        } catch (e) { } finally {
-            console.log('settimeout');
-            setTimerId(setTimeout(firstPost, 10000));
-        }
+        } catch (e) { }
+        console.log('settimeout');
+        setTimerId(setTimeout(firstPost, 10000));
     }
 
     const onClickNextRoute = async () => {
@@ -170,10 +170,9 @@ const CarWatch: NextPage = () => {
                 </>
             );
             modal.open();
-        } finally {
-            target.disabled = false;
-            firstPost();
         }
+        target.disabled = false;
+        firstPost();
     }
     const syousai = async () => {
         console.log('syousaitimerId', timerId);
@@ -232,9 +231,8 @@ const CarWatch: NextPage = () => {
                     <p>通信エラー</p>
                 </>
             )
-        } finally {
-            firstPost();
         }
+        firstPost();
     }
 
     const onClickCarMenu = () => {
