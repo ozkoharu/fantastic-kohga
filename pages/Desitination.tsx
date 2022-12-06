@@ -5,7 +5,7 @@ import React, { useState, SetStateAction, useContext, useEffect } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import { circle, LatLng } from "leaflet";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
-import { UserIdContext } from "./_app";
+import { LoadingContext, UserIdContext } from "./_app";
 import { useModal } from "../component/hooks/useModal";
 
 
@@ -89,6 +89,7 @@ const Desitination: NextPage = () => {
     const [junkai, setJunkai] = useState<boolean>(false);
     const [isAfterRouteSearch, setIsAfterRouteSearch] = useState<boolean>(false);
     const [middleFlag, setMiddleFlag] = useState<number>(-1);
+    const { isShow, setLoading } = useContext(LoadingContext);
     const router = useRouter();
     const PostUserId: Request = {
         userId: userId
@@ -180,6 +181,7 @@ const Desitination: NextPage = () => {
             promises.push(resPromise);
         }
         try {
+            setLoading(true);
             const results = await Promise.all(promises);
             const prepoly: LatLng[][] = [];
             for (const elem of results) {
@@ -203,6 +205,7 @@ const Desitination: NextPage = () => {
             console.log(e);
         } finally {
             allButtons(false);
+            setLoading(false);
         }
     }
     const onClickBack = () => {
@@ -220,6 +223,7 @@ const Desitination: NextPage = () => {
         const passableinfo = [];
         if (checked) {
             try {
+                setLoading(true);
                 const res = await fetch(PostOkRouteUrl, {
                     method: "POST",
                     headers: {
@@ -249,6 +253,7 @@ const Desitination: NextPage = () => {
                 console.log(e);
             }
         }
+        setLoading(false);
         setViewCircle(passableinfo);
     }
 
@@ -415,13 +420,13 @@ const Desitination: NextPage = () => {
             {
                 middleFlag === -1 ? null : <_BaseButton onClick={onClickMiddlePoint} _class="button" id="middleButton">中継点確定</_BaseButton>
             }
-            <_BaseButton onClick={RouteSave} _class="button" id="saveButton">
+            <_BaseButton onClick={RouteSave} _class="button dest-btn" id="saveButton">
                 保存
             </_BaseButton>
-            <_BaseButton onClick={routing} _class="button" id="routingButton">
+            <_BaseButton onClick={routing} _class="button dest-btn" id="routingButton">
                 この経路で車を動かす
             </_BaseButton>
-            <_BaseButton onClick={onClickBackPage} _class="button" id="backButton">
+            <_BaseButton onClick={onClickBackPage} _class="button dest-btn" id="backButton">
                 目的地選択に戻る
             </_BaseButton>
             <CheckBoxForm name="junkai" id="junkai" onChange={onClickJunkai} disabled={true}>
@@ -434,16 +439,16 @@ const Desitination: NextPage = () => {
     );
     const beforeButtons = (
         <>
-            <_BaseButton onClick={onClickRouteSearch} _class="button" id="beforeRouteSearch">
+            <_BaseButton onClick={onClickRouteSearch} _class="button dest-btn" id="beforeRouteSearch">
                 経路探索
             </_BaseButton>
-            <_BaseButton onClick={onClickTurtial} _class="button" id="beforeTurtial">
+            <_BaseButton onClick={onClickTurtial} _class="button tutorial-btn" id="beforeTurtial">
                 チュートリアルを開く
             </_BaseButton>
-            <_BaseButton onClick={onClickRouteReset} _class="button" id="beforeReset">
+            <_BaseButton onClick={onClickRouteReset} _class="button dest-btn" id="beforeReset">
                 目的地リセット
             </_BaseButton>
-            <_BaseButton onClick={onClickBack} _class="button" id="beforeBack">
+            <_BaseButton onClick={onClickBack} _class="button map-exit-btn" id="beforeBack">
                 戻る
             </_BaseButton>
             <CheckBoxForm name="beforejunkai" id="beforejunkai" onChange={onClickJunkai} >
@@ -463,19 +468,21 @@ const Desitination: NextPage = () => {
             {
                 modal.show()
             }
-            <DynamicMapNoSSR
-                setRelayPoint={setRelayPoint}
-                circle={viewCircle}
-                relayPoint={relayPoint}
-                poly={poly}
-                setPoly={setPoly}
-                isAfterRouteSearch={isAfterRouteSearch}
-                onClickRouteSearch={onClickRouteSearch}
-                modal={modal}
-                allButtons={allButtons}
-                middleFlag={middleFlag}
-                setMiddleFlag={setMiddleFlag}
-            />
+            <div className="map">
+                <DynamicMapNoSSR
+                    setRelayPoint={setRelayPoint}
+                    circle={viewCircle}
+                    relayPoint={relayPoint}
+                    poly={poly}
+                    setPoly={setPoly}
+                    isAfterRouteSearch={isAfterRouteSearch}
+                    onClickRouteSearch={onClickRouteSearch}
+                    modal={modal}
+                    allButtons={allButtons}
+                    middleFlag={middleFlag}
+                    setMiddleFlag={setMiddleFlag}
+                />
+            </div>
         </>
     );
 }

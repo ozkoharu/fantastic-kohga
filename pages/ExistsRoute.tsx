@@ -4,8 +4,9 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import { useModal } from "../component/hooks/useModal";
+import { usePageLoading } from "../component/hooks/usepageLoading";
 import { DynamicCarWatchMap } from "./CarWatch";
-import { UserIdContext } from "./_app";
+import { LoadingContext, UserIdContext } from "./_app";
 
 interface ReqRouteData {
     userId: string;
@@ -50,6 +51,7 @@ const ExistsPage: NextPage = () => {
     const [junkai, setJunkai] = useState<boolean>(false);
     const [onlyRouteName, setOnltRouteName] = useState('');
     const [passbleNameList, setPassbleNameList] = useState<PassableNames[]>([]);
+    const { isShow, setLoading } = useContext(LoadingContext);
     useEffect(() => {
         FirstPost();
     }, []);
@@ -91,6 +93,7 @@ const ExistsPage: NextPage = () => {
             routeName: onlyRouteName,
         };
         try {
+            setLoading(true);
             const res = await fetch(PostReqRouteUrl, {
                 method: "POST",
                 headers: {
@@ -103,8 +106,6 @@ const ExistsPage: NextPage = () => {
                 console.log('keirohyouji', result);
                 if (result.route !== undefined) setPoly(result.route);
                 if (result.dest !== undefined) setDest(result.dest);
-                console.log('ケイスケ本田地点', dest);
-                console.log('ケイスケ本田経路', poly);
             } else {
                 modal.setContent(
                     <>
@@ -122,11 +123,12 @@ const ExistsPage: NextPage = () => {
             );
             modal.open();
         }
+        setLoading(false);
     }
     const onClickRouting = async () => {
         //経路実行APIをやって
-        console.log('routing');
         try {
+            setLoading(true);
             const PostData: ReqPathRoutingData = {
                 userId: userId,
                 data: poly,
@@ -159,6 +161,7 @@ const ExistsPage: NextPage = () => {
             );
             modal.open();
         }
+        setLoading(false);
     }
 
     return (

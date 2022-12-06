@@ -256,19 +256,25 @@ const CarWatch: NextPage = () => {
             {
                 modal.show()
             }
-            <_BaseButton onClick={onClickNextRoute} id="nextButton">
-                次の目的地に行く
-            </_BaseButton>
-            <_BaseButton onClick={syousai} id="statusButton">
-                詳細
-            </_BaseButton>
-            <_BaseButton onClick={CarEnd} id="stopCarButton">
-                車を使うのを止める
-            </_BaseButton>
-            <_BaseButton onClick={onClickCarMenu}>
-                車メニューに戻る
-            </_BaseButton>
-            <DynamicCarWatchMap poly={poly} dest={dest} />
+            <div className="watch-page">
+                <header>
+                    <_BaseButton onClick={onClickNextRoute} id="nextButton" _class="button watch-btn">
+                        次の目的地に行く
+                    </_BaseButton>
+                    <_BaseButton onClick={syousai} id="statusButton" _class="button watch-btn">
+                        詳細
+                    </_BaseButton>
+                    <_BaseButton onClick={CarEnd} id="stopCarButton" _class="button watch-btn">
+                        使用を停止
+                    </_BaseButton>
+                    <_BaseButton onClick={onClickCarMenu} _class="button map-exit-btn">
+                        戻る
+                    </_BaseButton>
+                </header>
+                <div className="map">
+                    <DynamicCarWatchMap poly={poly} dest={dest} />
+                </div>
+            </div>
         </>
     );
 }
