@@ -99,10 +99,20 @@ const CarWatch: NextPage = () => {
                 if (result.arrival !== undefined) setArrival(result.arrival);
                 if (result.arrange !== undefined) setArrange(result.arrange);
                 if (result.reserve !== undefined) setReserve(result.reserve);
+                console.log('result.status', result.status);
 
-                if (result.status && result.status !== undefined) {
+                if (result.status) {
                     console.log('生きてる');
-                } else {
+                } else if (result.status === undefined) {
+                    modal.setContent(
+                        <>
+                            <p>車を確保できませんでした<br />もう一度車を確保します</p>
+                        </>
+                    );
+                    modal.open();
+                    firstPost();
+                }
+                else {
                     modal.setContent(
                         <>
                             <p>車が死にました</p>
