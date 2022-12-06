@@ -100,7 +100,9 @@ const CarWatch: NextPage = () => {
                 if (result.arrange !== undefined) setArrange(result.arrange);
                 if (result.reserve !== undefined) setReserve(result.reserve);
 
-                if (!result.status) {
+                if (result.status && result.status !== undefined) {
+                    console.log('生きてる');
+                } else {
                     modal.setContent(
                         <>
                             <p>車が死にました</p>
