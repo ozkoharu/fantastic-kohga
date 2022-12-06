@@ -110,7 +110,6 @@ const CarWatch: NextPage = () => {
                         </>
                     );
                     modal.open();
-                    firstPost();
                 }
                 else {
                     modal.setContent(
