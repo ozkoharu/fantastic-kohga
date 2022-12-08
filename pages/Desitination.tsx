@@ -146,10 +146,13 @@ const Desitination: NextPage = () => {
         }
         allButtons(true);
 
+        //ハードコピー
         const internalRelayPoint = relayPoint.map((e) => e);
+        //後ろに点を追加
         if (junkai) {
             internalRelayPoint.push(relayPoint[0]);
         }
+
         const points = [[(internalRelayPoint.shift() as relayPoint).Point]];
         const temp: LatLng[] = [];
         for (const elem of internalRelayPoint) {
@@ -162,7 +165,11 @@ const Desitination: NextPage = () => {
                 temp.length = 0;
             }
         }
-        void points.shift();
+        if (points.length === 1) {
+            points[0].push(points[0][0]);
+        } else {
+            void points.shift();
+        }
         console.log('points', points);
 
         const promises: Promise<globalThis.Response>[] = [];
