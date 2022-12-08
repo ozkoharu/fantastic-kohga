@@ -39,6 +39,10 @@ interface ReqDelPassable {
     adminId: string,
     passId: number[],
 }
+interface ResDelPassable {
+    succeeded: string,
+    passPoints: LatLngRadiusID[],
+}
 
 export const DynamicCircleMap = dynamic(() => {
     return (
@@ -161,8 +165,9 @@ const PathOkManager: NextPage = () => {
                     },
                     body: JSON.stringify(DelPassableData)
                 });
-                const result = await res.json() as BaseApiResponse;
+                const result = await res.json() as ResDelPassable;
                 if (result.succeeded) {
+                    setRemoveCircle(result.passPoints);
                     modal.setContent(
                         <>
                             <p>削除に成功しました</p>
@@ -184,6 +189,8 @@ const PathOkManager: NextPage = () => {
                     </>
                 );
                 modal.open();
+            } finally {
+                setRemoveFlag(false);
             }
         }
     }
