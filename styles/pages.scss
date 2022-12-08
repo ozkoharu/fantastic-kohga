@@ -1,0 +1,343 @@
+@use 'mixin' as mix;
+
+// PC
+// @media screen {
+// 初めのページ
+.top-page {
+	position: fixed;
+	@include mix.flex-center();
+	flex-direction: column;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	user-select: none;
+	background-color: black;
+
+	.top-title {
+		position: relative;
+		padding: 0 auto;
+		color: white;
+		font-size: 10vw;
+		text-shadow: -1px 1px 20px black, 0 1px 20px black, 1px 1px 20px black,
+			-1px 0 20px black, 1px 0 20px black, -1px -1px 20px black,
+			0 -1px 20px black, 1px 0 20px black;
+		z-index: 1;
+	}
+
+	.top-btn {
+		position: relative;
+		padding: 0.3em 1.2em;
+		font-size: 2em;
+		cursor: pointer;
+		line-height: normal;
+		z-index: 1;
+	}
+
+	.go-manage {
+		position: absolute;
+		top: 90%;
+		left: 3%;
+		font-size: 1em;
+		--color: blue;
+		color: var(--color);
+		cursor: pointer;
+		text-decoration: solid underline 1px var(--color);
+		text-shadow: 0px 0px 5px white, 2px 2px 5px white, -2px -2px 5px white;
+		transition: color 0.3s;
+		z-index: 1;
+
+		&:hover {
+			--color: rgba(111, 22, 163, 0.808);
+			transition: color 0.3s;
+		}
+	}
+}
+
+// 車メニュー
+.car-menu {
+	@include mix.flex-center();
+	flex-direction: column;
+	margin: 0 10vw;
+	width: 80vw;
+	height: 90vh;
+
+	// セクション要素
+	section {
+		display: grid;
+		grid-template-rows: 5vh 10vh;
+		grid-template-columns: 35vw 15vw;
+		grid-template-areas:
+			'title  img '
+			'text   img ';
+		margin: 3vh auto;
+
+		background: white;
+		border: solid 1px black;
+		border-radius: 1vw;
+		box-shadow: 5px 5px 10px rgb(51, 51, 51);
+		cursor: pointer;
+		transition: ease-out 0.5s;
+		z-index: 2;
+
+		// セクションの見出し
+		h2 {
+			grid-area: title;
+			top: 0;
+			margin: 1.5vh 0 0 4vw;
+			font-size: 1.5rem;
+		}
+
+		// セクション内の説明文
+		p {
+			grid-area: text;
+			width: auto;
+			max-width: 40vw;
+			margin-left: 2vw;
+			font-size: 0.8rem;
+
+			text-decoration: solid underline 1px gray;
+		}
+
+		// セクション内の参考画像
+		.img1 {
+			@include mix.img-option();
+			background-image: url('../assets/images/poster.png');
+		}
+		.img2 {
+			@include mix.img-option();
+			background-image: url('../assets/images/poster.png');
+		}
+		.img3 {
+			@include mix.img-option();
+			background-image: url('../assets/images/poster.png');
+		}
+
+		&:hover {
+			background: rgb(223, 223, 223);
+			transition: ease-out 0.3s;
+			transform: translateY(3%);
+		}
+	}
+
+	// .bg-img {
+	// 	position: fixed;
+	// 	inset: 0;
+	// 	width: 100vw;
+	// 	height: 100vh;
+	// 	background-image: url('../assets/images/winter.jpg');
+	// 	background-size: cover;
+
+	// 	z-index: -1;
+	// }
+}
+
+// 新規ルート作成画面
+.dest-page {
+	header {
+		@include mix.flex-center();
+
+		position: sticky;
+		inset: 0;
+		width: 100vw;
+		height: 9.8vh;
+		z-index: 10;
+
+		background: rgb(240, 240, 240);
+		border-bottom: solid 1px rgb(201, 201, 201);
+		box-shadow: 0 1px 20px black;
+
+		h1 {
+			font-size: normal;
+		}
+	}
+
+	.dest-btn {
+		height: 4vh;
+		margin: 0 25px 0 15px;
+		padding: 1px 20px;
+		font-size: 1.3rem;
+	}
+
+	.tutorial-btn {
+		position: absolute;
+		right: 16em;
+		height: 4vh;
+		padding: 1px 18px;
+		font-size: 1.3rem;
+	}
+}
+
+// 既存ルート選択画面
+.exist-page {
+	header {
+		@include mix.flex-center();
+
+		position: sticky;
+		inset: 0;
+		width: 100vw;
+		height: 9.8vh;
+		z-index: 10;
+
+		background: rgb(240, 240, 240);
+		border-bottom: solid 1px rgb(201, 201, 201);
+		box-shadow: 0 1px 20px black;
+
+		h1 {
+			font-size: normal;
+		}
+	}
+
+	select {
+		height: 4vh;
+		margin: 0 15px;
+		padding: 0 0.2em;
+
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 1.1rem;
+	}
+
+	.exist-btn {
+		height: 4vh;
+		margin: 0 25px;
+		padding: 0 20px;
+		font-size: 1.3rem;
+	}
+
+	.map {
+		--map-cursor: pointer 12 50, grab;
+	}
+}
+
+// 車の状況確認画面
+.watch-page {
+	header {
+		@include mix.flex-center();
+
+		position: sticky;
+		inset: 0;
+		width: 100vw;
+		height: 9.8vh;
+		z-index: 10;
+
+		background: rgb(240, 240, 240);
+		border-bottom: solid 1px rgb(201, 201, 201);
+		box-shadow: 0 1px 20px black;
+
+		h1 {
+			font-size: normal;
+		}
+	}
+
+	.watch-btn {
+		height: 4vh;
+		margin: 0 25px 0 15px;
+		padding: 1px 20px;
+		font-size: 1.3rem;
+	}
+
+	.map {
+		--map-cursor: pointer 12 50, grab;
+	}
+}
+
+// 管理画面
+.manage-page {
+	@include mix.flex-center();
+	flex-direction: column;
+
+	section {
+		.img1 {
+			background-image: url('../assets/images/path.png');
+		}
+	}
+
+	.manage-btn {
+		margin: 15vh 0 0 0;
+		min-width: 10vw;
+		min-height: 5vh;
+		font-size: 2rem;
+	}
+}
+
+// 終わりの画面
+.end-page {
+	@include mix.flex-center();
+	flex-direction: column;
+
+	h2 {
+		margin-top: 30vh;
+		font-size: x-large;
+	}
+
+	.end-btn {
+		margin-top: 5vh;
+		padding: 2px 15px;
+		font-size: 20px;
+	}
+}
+// }
+
+/* ---------------- 前の設定で残ってたやつ ---------------- */
+// スマホ(雑レスポンシブ)
+// @media screen and (max-width: 540px) {
+// 	// 初めの画面
+// 	.top-page {
+// 		.top-title {
+// 			position: relative;
+// 			padding: 0 auto;
+// 			font-size: 15vw;
+// 			color: white;
+// 			text-shadow: -1px 1px 20px black, 0 1px 20px black,
+// 				1px 1px 20px black, -1px 0 20px black, 1px 0 20px black,
+// 				-1px -1px 20px black, 0 -1px 20px black, 1px 0 20px black;
+// 			z-index: 1;
+// 		}
+
+// 		.top-btn {
+// 			position: relative;
+// 			padding: 0.2em 1em;
+// 			font-size: 1.5em;
+// 			cursor: pointer;
+// 			line-height: normal;
+// 			z-index: 1;
+// 		}
+// 	}
+
+// 	// 車メニュー
+// 	.car-menu {
+// 		margin: 0 5vw;
+// 		max-width: 90vw;
+
+// 		// セクション要素
+// 		section {
+// 			grid-template-columns: 65vw 25vw;
+// 			border-radius: 10px;
+
+// 			// セクションの見出し
+// 			h2 {
+// 				margin: 1.5vh 0 0 4vw;
+// 				font-size: 1rem;
+// 			}
+
+// 			// セクション内の説明文
+// 			p {
+// 				max-width: 50vw;
+// 				font-size: 0.65rem;
+// 			}
+
+// 			// セクション内の参考画像
+// 			.img {
+// 				max-width: 30vw;
+// 			}
+// 		}
+// 	}
+
+// 	// 終わりの画面
+// 	.end-page {
+// 		h2 {
+// 			font-size: medium;
+// 		}
+// 	}
+// }

@@ -1,0 +1,20 @@
+// flexで中央揃えさせる
+@mixin flex-center {
+	display: flex;
+	justify-content: center; // 主軸方向
+	align-items: center; // 交差軸方向
+}
+
+// 車メニュー内の共通設定
+@mixin img-option {
+	grid-area: img;
+	width: auto;
+	height: auto;
+	max-width: 16vw;
+	max-height: 9vh;
+	margin: 3vh 2vw;
+	padding: 0;
+
+	background-size: cover;
+	border: solid 1px rgb(192, 192, 192);
+}

@@ -1,5 +1,4 @@
-import '../styles/global.scss';
-import '../styles/modal.css';
+import '../styles/styles.scss';
 import "leaflet/dist/leaflet.css";
 import type { AppProps } from 'next/app';
 import React, { createContext, useState } from 'react';

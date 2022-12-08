@@ -1,34 +1,308 @@
-.App {
-  text-align: center;
-  height: 90vh;
+@use 'mixin' as mix;
+
+:root {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+		Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', 'Yu Gothic', 'Meryo',
+		sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+	user-select: none;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
-.leaflet-container {
-  position: relative;
+*::-webkit-scrollbar {
+	display: none;
+}
 
-  width: 90vw;
-  height: 90vh;
+header {
+	@include mix.flex-center();
+
+	position: sticky;
+	inset: 0;
+	width: 100vw;
+	height: 10vh;
+	z-index: 10;
+
+	background: rgb(240, 240, 240);
+	border-bottom: solid 1px rgb(201, 201, 201);
+	box-shadow: 0 1px 20px black;
+
+	h1 {
+		font-size: normal;
+	}
+}
+
+body {
+	content: '';
+	margin: 0;
+	padding: 0;
+	overflow: hidden scroll;
+}
+
+// セクション要素
+section {
+	display: grid;
+	grid-template-rows: 5vh 10vh;
+	grid-template-columns: 35vw 15vw;
+	grid-template-areas:
+		'title  img '
+		'text   img ';
+	margin: 3vh auto;
+
+	background: white;
+	border: solid 1px black;
+	border-radius: 1vw;
+	box-shadow: 5px 5px 10px rgb(51, 51, 51);
+	cursor: pointer;
+	transition: ease-out 0.5s;
+	z-index: 2;
+
+	// セクションの見出し
+	h2 {
+		grid-area: title;
+		top: 0;
+		margin: 1.5vh 0 0 4vw;
+		font-size: 1.5rem;
+	}
+
+	// セクション内の説明文
+	p {
+		grid-area: text;
+		width: auto;
+		max-width: 40vw;
+		margin-left: 2vw;
+		font-size: 0.8rem;
+
+		text-decoration: solid underline 1px gray;
+	}
+
+	// セクション内の参考画像
+	.img1 {
+		@include mix.img-option();
+		background-image: url('../assets/images/poster.png');
+	}
+
+	.img2 {
+		@include mix.img-option();
+		background-image: url('../assets/images/poster.png');
+	}
+
+	.img3 {
+		@include mix.img-option();
+		background-image: url('../assets/images/poster.png');
+	}
+
+	&:hover {
+		background: rgb(223, 223, 223);
+		transition: ease-out 0.3s;
+		transform: translateY(3%);
+	}
+}
+
+// チェックボックス非表示
+input[type='checkbox'] {
+	display: none;
+}
+
+// チェックボックス用ラベル
+label {
+	--lbl-color: rgb(32, 102, 252);
+	--color: white;
+
+	position: relative;
+	display: inline-block;
+	margin: 20px;
+	padding: 5px 5px 5px 80px;
+
+	background-color: var(--lbl-color);
+	border-radius: 5px;
+	box-shadow: 0 0 10px black;
+	color: var(--color);
+	cursor: pointer;
+	font-size: 20px;
+	user-select: none;
+
+	// ボールが通る細線
+	&::before {
+		position: absolute;
+		top: 14px;
+		left: 3px;
+		width: 60px;
+		height: 5px;
+		margin: 5px;
+
+		background-color: #d5d5d5;
+		border-radius: 10px;
+		content: '';
+		transition: all 0.3s ease;
+	}
+
+	// ボール()
+	&::after {
+		content: '';
+		position: absolute;
+		top: 1px;
+		left: 0;
+		width: 30px;
+		height: 30px;
+		margin: 5px;
+
+		animation-name: checked;
+		animation-duration: 0.3s;
+		background-color: #d5d5d5;
+		border-radius: 50%;
+		transition: all 0.3s ease;
+	}
+
+	// チェックされた時は色を付ける
+	input:checked+&::before {
+		background-color: #29ce9a;
+	}
+
+	// チェックされた時
+	input:checked+&::after {
+		animation-name: unchecked;
+		animation-duration: 0.3s;
+		background-color: #29ce9a;
+		transform: translateX(40px);
+	}
+}
+
+@keyframes checked {
+
+	0%,
+	100% {
+		top: 0px;
+		height: 30px;
+		width: 30px;
+	}
+
+	50% {
+		top: 6px;
+		height: 18px;
+		width: 40px;
+	}
+}
+
+@keyframes unchecked {
+
+	0%,
+	100% {
+		top: 0px;
+		height: 30px;
+		width: 30px;
+	}
+
+	50% {
+		top: 6px;
+		height: 18px;
+		width: 40px;
+	}
+}
+
+// 背景動画
+video {
+	position: fixed;
+	width: 100%;
+	z-index: -1;
+}
+
+// ポスター画像
+.bg-img {
+	background-image: url('../assets/images/poster.png');
+	background-size: cover;
+	z-index: 0;
+}
+
+.App {
+	text-align: center;
+	height: 90vh;
 }
 
 .numberMarker {
-  background: rgba(0, 0, 0, 0);
+	background: rgba(0, 0, 0, 0);
 }
 
+.leaflet-container {
+	position: relative;
+	height: 90vh;
+	width: 100vw;
+
+	cursor: var(--map-cursor, auto) !important;
+
+	&:active {
+		--map-cursor: grabbing;
+	}
+}
+
+// 地図の共通設定
+.map {
+	--zoom-level: 18;
+
+	position: relative;
+	content: '';
+}
+
+// 読み込み画面
 .loader {
-  position: absolute;
-  @include mix.flex-center();
-  flex-direction: column;
-  inset: 0;
+	position: absolute;
+	@include mix.flex-center();
+	flex-direction: column;
+	inset: 0;
 
-  background: rgba(255, 255, 255, 0.342);
-  z-index: 9999;
+	background: rgba(255, 255, 255, 0.342);
+	z-index: 9999;
 }
 
-
+// 読み込み画面の文字
 .nowloading {
-  margin-top: 4rem;
+	margin-top: 4rem;
 
-  color: black;
-  font-size: 2rem;
-  line-height: 1.5rem;
+	color: black;
+	font-size: 2rem;
+	line-height: 1.5rem;
+}
+
+// ボタンの共通設定
+.button {
+	--btn-color: rgb(32, 102, 252);
+	--color: white;
+
+	background: var(--btn-color);
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0 0 10px black;
+	color: var(--color);
+	cursor: pointer;
+	text-align: center;
+	transition: background-color 0.3s;
+
+	&:hover {
+		--btn-color: rgb(25, 81, 202);
+		--color: rgb(231, 231, 231);
+
+		transition: background-color 0.3s;
+	}
+}
+
+// 終了、戻るボタン
+.exit-btn {
+	height: 4vh;
+	margin: 0 25px;
+	padding: 0 20px;
+	font-size: 1.3rem;
+}
+
+// 地図ページの戻るボタン
+.map-exit-btn {
+	position: absolute;
+	right: 10em;
+	height: 4vh;
+	padding: 1px 20px;
+	font-size: 1.3rem;
+}
+
+//マーカーの数字
+.numberMarker {
+	background: rgba(0, 0, 0, 0);
 }
