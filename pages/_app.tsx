@@ -13,6 +13,7 @@ export const AdminIdContext = createContext({} as {
   adminId: string,
   setAdminId: React.Dispatch<React.SetStateAction<string>>
 })
+export const LoadingContext = createContext<usePageLoadingType>({} as usePageLoadingType);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [userId, setUserId] = useState<string>('');
