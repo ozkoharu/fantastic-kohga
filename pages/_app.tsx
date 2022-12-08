@@ -1,4 +1,4 @@
-import '../styles/global.css';
+import '../styles/global.scss';
 import '../styles/modal.css';
 import "leaflet/dist/leaflet.css";
 import type { AppProps } from 'next/app';
