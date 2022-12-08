@@ -171,6 +171,7 @@ const Desitination: NextPage = () => {
                 userId: userId,
                 data: elem
             };
+            console.log('debug', PostRouteData);
             const resPromise = fetch(PostAstarUrl, {
                 method: "POST",
                 headers: {
