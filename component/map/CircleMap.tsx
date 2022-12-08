@@ -19,6 +19,8 @@ interface Props {
     removeFlag: boolean,
     removeCircleId: number[],
     setRemoveCircleId: React.Dispatch<React.SetStateAction<number[]>>,
+    removeCircle: LatLngRadiusID[],
+    setRemoveCircle: React.Dispatch<React.SetStateAction<LatLngRadiusID[]>>,
 }
 const position = new LatLng(38.72311671577611, 141.0346841825174);
 const zoomlebel = 18;
@@ -34,6 +36,8 @@ const CircleMap: React.FC<Props> = ({
     removeFlag,
     removeCircleId,
     setRemoveCircleId,
+    removeCircle,
+    setRemoveCircle,
 }) => {
     const modal = useModal();
 
@@ -83,17 +87,20 @@ const CircleMap: React.FC<Props> = ({
         return (
             <React.Fragment>
                 {
-                    circle.map((e, index) =>
+                    removeCircle.map((elem, index) =>
                         <Circle
-                            center={e.position}
+                            center={elem.position}
                             pathOptions={{ fillColor: "blue" }}
-                            radius={e.radius}
+                            radius={elem.radius}
                             key={index}
                             stroke={false}
                             eventHandlers={{
                                 click: (e) => {
-                                    console.log('e.latlng', e.latlng);
-                                    console.log('circle', circle);
+                                    setRemoveCircleId((prevValue) => {
+                                        const newValue = [...prevValue, elem.passableId];
+                                        return newValue;
+                                    });
+                                    console.log('removeCircleId', removeCircleId);
                                 }
                             }}
                         />

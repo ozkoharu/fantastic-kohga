@@ -57,6 +57,7 @@ const PathOkManager: NextPage = () => {
     const { adminId } = useContext(AdminIdContext);
     const [lastNum, setLastNum] = useState<number>(0);
     const [removeCircleId, setRemoveCircleId] = useState<number[]>([]);
+    const [removeCirle, setRemoveCircle] = useState<LatLngRadiusID[]>([]);
 
     const onClickBack = () => {
         router.push('/CarManager');
@@ -145,6 +146,7 @@ const PathOkManager: NextPage = () => {
             }
         }
         setCircle(passableinfo);
+        setRemoveCircle(passableinfo);
     }
     const Removemode = () => {
         //削除する時は削除したいCircleのIDだけPOSTする
@@ -184,6 +186,8 @@ const PathOkManager: NextPage = () => {
                 removeFlag={removeFlag}
                 removeCircleId={removeCircleId}
                 setRemoveCircleId={setRemoveCircleId}
+                removeCircle={removeCirle}
+                setRemoveCircle={setRemoveCircle}
             />
         </>
     )
