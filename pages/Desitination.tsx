@@ -66,7 +66,7 @@ interface reqRouteSave {
     succeeded: boolean,
     routeName?: string,
 }
-const PostAstarUrl = 'http://sazasub.kohga.local/astar';
+const PostAstarUrl = 'http://sazasub.kohga.local/threadAstar';
 const PostOkRouteUrl = 'http://sazasub.kohga.local/reqPassable';
 const PostRoutingUrl = 'http://sazasub.kohga.local/execRoute';
 const PostRouteSaveUrl = 'http://sazasub.kohga.local/saveRoute';
