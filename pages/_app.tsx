@@ -18,10 +18,12 @@ export const LoadingContext = createContext<usePageLoadingType>({} as usePageLoa
 function MyApp({ Component, pageProps }: AppProps) {
   const [userId, setUserId] = useState<string>('');
   const [adminId, setAdminId] = useState<string>('');
+  const [isShow, setLoading] = useState<boolean>(false);
   return (
     <>
       <UserIdContext.Provider value={{ userId, setUserId }}>
         <AdminIdContext.Provider value={{ adminId, setAdminId }}>
+
           <Component {...pageProps} />
         </AdminIdContext.Provider>
       </UserIdContext.Provider>
