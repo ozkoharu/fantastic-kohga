@@ -93,6 +93,7 @@ const CircleMap: React.FC<Props> = ({
                             eventHandlers={{
                                 click: (e) => {
                                     console.log('e.latlng', e.latlng);
+                                    console.log('circle', circle);
                                 }
                             }}
                         />
