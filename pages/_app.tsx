@@ -3,6 +3,8 @@ import '../styles/modal.css';
 import "leaflet/dist/leaflet.css";
 import type { AppProps } from 'next/app';
 import React, { createContext, useState } from 'react';
+import { PageLoading } from '../component/atoms/pageLoading';
+import { usePageLoadingType } from '../component/hooks/usepageLoading';
 
 
 export const UserIdContext = createContext({} as {
@@ -23,8 +25,10 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <UserIdContext.Provider value={{ userId, setUserId }}>
         <AdminIdContext.Provider value={{ adminId, setAdminId }}>
-
-          <Component {...pageProps} />
+          <LoadingContext.Provider value={{ isShow, setLoading }}>
+            <PageLoading isShow={isShow} />
+            <Component {...pageProps} />
+          </LoadingContext.Provider>
         </AdminIdContext.Provider>
       </UserIdContext.Provider>
     </>
