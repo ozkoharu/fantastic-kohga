@@ -1,5 +1,6 @@
 import { LatLng } from "leaflet";
 import { NextPage } from "next";
+import { MODERN_BROWSERSLIST_TARGET } from "next/dist/shared/lib/constants";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
@@ -8,17 +9,10 @@ import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { useModal } from "../component/hooks/useModal";
 import { AdminIdContext } from "./_app";
 
-const SavePathCircleUrl = 'http://saza.kohga.local:3001/addPassable';
-const getPathOkUrl = 'http://saza.kohga.local:3001/reqPassAdmin';
-const EndAdminUrl = 'http://saza.kohga.local:3001/terminateAdmin';
+const addPassableUrl = 'http://saza.kohga.local/addPassable';
+const reqPassAdminUrl = 'http://saza.kohga.local/reqPassAdmin';
+const EndAdminUrl = 'http://saza.kohga.local/terminateAdmin';
 
-
-interface ReqEndAdmin {
-    adminId: string
-}
-interface ResEndAdmin {
-    succeeded: boolean
-}
 interface LatLngRadius {
     position: LatLng,
     radius: number,
@@ -26,11 +20,26 @@ interface LatLngRadius {
 interface LatLngRadiusID extends LatLngRadius {
     passableId: number,
 }
-interface IsPassable {
-    succeeded: boolean,
-    passableInfo?: LatLngRadiusID[]
+interface ReqEndAdmin {
+    adminId: string
 }
-
+interface ResEndAdmin {
+    succeeded: boolean
+}
+interface ReqPassable {
+    adminId: string,
+}
+interface ResPassable {
+    succeeded: boolean,
+    passableInfo?: LatLngRadiusID[],
+}
+interface ReqAddPassable {
+    adminId: string,
+    passPoints: LatLngRadius[]
+}
+interface ResAddPassable {
+    succeeded: boolean,
+}
 
 export const DynamicCircleMap = dynamic(() => {
     return (
@@ -46,29 +55,86 @@ const PathOkManager: NextPage = () => {
     const [radius, setRadius] = useState<number>(0);
     const [removeFlag, setRemoveFlag] = useState<boolean>(false);
     const { adminId } = useContext(AdminIdContext);
+    const [lastNum, setLastNum] = useState<number>(0);
+    const [removeCircleId, setRemoveCircleId] = useState<number[]>([]);
 
     const onClickBack = () => {
         router.push('/CarManager');
     }
     const kakutei = async () => {
-        console.log('cirle', circle);
+        //通行可能領域保存
+        //最新のやつだけ送りたい
+        //正気か？モーダルが欲しい
+        console.log('lastnum', lastNum);
+        const num = circle.length;
+        console.log('現在打たれている点のわ', num);
+        const newPointsNum = lastNum - num;
+        console.log('新しい領域の数', newPointsNum);
+        //circleの後ろからnum-lastNum個の点をPOSTする
+        const newPoints = [];
+        newPoints.push(...circle.slice(lastNum - num));
+        console.log('newPoints', newPoints);
+        console.log('circle', circle);
+
+        const addPassableData = {
+            adminId: adminId,
+            passPoints: newPoints,
+        }
+        try {
+            const res = await fetch(addPassableUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(addPassableData)
+            });
+            const result = await res.json() as ResAddPassable;
+            if (result.succeeded) {
+                modal.setContent(
+                    <>
+                        <p>通行可能領域を変更しました</p>
+                    </>
+                );
+                modal.open();
+            } else {
+                modal.setContent(
+                    <>
+                        <p>変更に失敗しました<br />もう一度設定してください</p>
+                    </>
+                );
+                modal.open();
+            }
+        } catch (e) {
+            modal.setContent(
+                <>
+                    <p>通信エラー</p>
+                </>
+            );
+            modal.open();
+        }
     }
     const onChangePathOk = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const cheked = e.currentTarget.checked;
         const passableinfo = [];
+        const reqPassData: ReqPassable = {
+            adminId: adminId
+        }
         if (cheked) {
             try {
-                const res = await fetch(getPathOkUrl);
-                const result = await res.json() as IsPassable;
-
+                const res = await fetch(reqPassAdminUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(reqPassData)
+                });
+                const result = await res.json() as ResPassable;
                 if (result.succeeded) {
-                    if (result.passableInfo !== undefined) {
-                        for (const elem of result.passableInfo) {
-                            passableinfo.push(elem);
-                        }
+                    for (const elem of result.passableInfo || []) {
+                        passableinfo.push(elem);
                     }
+                    setLastNum(passableinfo.length);
                 }
-
             } catch (e) {
                 modal.setContent(
                     <>
@@ -80,7 +146,10 @@ const PathOkManager: NextPage = () => {
         }
         setCircle(passableinfo);
     }
-    const RemoveCircle = () => {
+    const Removemode = () => {
+        //削除する時は削除したいCircleのIDだけPOSTする
+        //いっぱい選択して一気に消したい
+        setRemoveFlag(true);
         console.log('remove');
     }
 
@@ -97,12 +166,15 @@ const PathOkManager: NextPage = () => {
             <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
                 通行可能領域表示
             </CheckBoxForm>
-            <_BaseButton onClick={RemoveCircle}>
+            <_BaseButton onClick={Removemode}>
                 領域削除モード
             </_BaseButton>
             <_BaseButton onClick={onClickBack}>
                 戻る
             </_BaseButton>
+            {
+                removeFlag ? <_BaseButton>削除</_BaseButton> : null
+            }
 
             <DynamicCircleMap
                 circle={circle}
@@ -110,7 +182,8 @@ const PathOkManager: NextPage = () => {
                 radius={radius}
                 setRadius={setRadius}
                 removeFlag={removeFlag}
-                setRemoveFlag={setRemoveFlag}
+                removeCircleId={removeCircleId}
+                setRemoveCircleId={setRemoveCircleId}
             />
         </>
     )

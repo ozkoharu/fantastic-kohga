@@ -5,7 +5,7 @@ import _BaseButton from "../component/atoms/button/_BaseButton";
 import { useModal } from "../component/hooks/useModal";
 import { AdminIdContext } from "./_app";
 
-const EndAdminUrl = 'http://saza.kohga.local:3001/terminateAdmin';
+const EndAdminUrl = 'http://saza.kohga.local/terminateAdmin';
 
 interface ReqEndAdmin {
     adminId: string

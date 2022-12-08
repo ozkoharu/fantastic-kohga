@@ -45,9 +45,9 @@ export const DynamicCarWatchMap = dynamic(() => {
     { ssr: false }
 )
 
-const CarWatchUrl = 'http://saza.kohga.local:3001/monitorCar';
-const NextUrl = 'http://saza.kohga.local:3001/proceedRoute';
-const endRouteUrl = 'http://saza.kohga.local:3001/endRoute';
+const CarWatchUrl = 'http://saza.kohga.local/monitorCar';
+const NextUrl = 'http://saza.kohga.local/proceedRoute';
+const endRouteUrl = 'http://saza.kohga.local/endRoute';
 
 const CarWatch: NextPage = () => {
     const router = useRouter();

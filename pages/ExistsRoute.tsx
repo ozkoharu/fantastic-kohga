@@ -36,9 +36,9 @@ interface ResPathRoutingData {
     succeeded: boolean,
     message?: string,
 }
-const PostReqRouteUrl = 'http://saza.kohga.local:3001/reqRoute';
-const PostReqRouteNameUrl = 'http://saza.kohga.local:3001/routeName';
-const PostPathRoutingUrl = 'http://saza.kohga.local:3001/execRoute';
+const PostReqRouteUrl = 'http://saza.kohga.local/reqRoute';
+const PostReqRouteNameUrl = 'http://saza.kohga.local/routeName';
+const PostPathRoutingUrl = 'http://saza.kohga.local/execRoute';
 
 
 const ExistsPage: NextPage = () => {

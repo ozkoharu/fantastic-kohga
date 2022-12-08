@@ -13,11 +13,12 @@ interface LatLngRadiusID extends LatLngRadius {
 }
 interface Props {
     circle: LatLngRadius[],
-    setCircle: React.Dispatch<React.SetStateAction<LatLngRadius[]>>
+    setCircle: React.Dispatch<React.SetStateAction<LatLngRadius[]>>,
     radius: number,
     setRadius: React.Dispatch<React.SetStateAction<number>>,
     removeFlag: boolean,
-    setRemoveFlag: React.Dispatch<React.SetStateAction<boolean>>,
+    removeCircleId: number[],
+    setRemoveCircleId: React.Dispatch<React.SetStateAction<number[]>>,
 }
 const position = new LatLng(38.72311671577611, 141.0346841825174);
 const zoomlebel = 18;
@@ -31,7 +32,8 @@ const CircleMap: React.FC<Props> = ({
     radius,
     setRadius,
     removeFlag,
-    setRemoveFlag,
+    removeCircleId,
+    setRemoveCircleId,
 }) => {
     const modal = useModal();
 
@@ -47,6 +49,14 @@ const CircleMap: React.FC<Props> = ({
     const ClickCircle = () => {
         useMapEvents({
             click(e) {
+                if (radius === 0) {
+                    modal.setContent(
+                        <>
+                            <p>半径を設定してください</p>
+                        </>
+                    );
+                    modal.open();
+                }
                 setCircle((prevValue) => {
                     const newValue = [...prevValue, { position: e.latlng, radius: radius }]
                     return newValue;
@@ -62,7 +72,8 @@ const CircleMap: React.FC<Props> = ({
                             pathOptions={{ fillColor: "blue" }}
                             radius={e.radius}
                             key={index}
-                            stroke={false} />
+                            stroke={false}
+                        />
                     )
                 }
             </React.Fragment>
@@ -75,10 +86,15 @@ const CircleMap: React.FC<Props> = ({
                     circle.map((e, index) =>
                         <Circle
                             center={e.position}
-                            pathOptions={{ fillColor: "red" }}
+                            pathOptions={{ fillColor: "blue" }}
                             radius={e.radius}
                             key={index}
                             stroke={false}
+                            eventHandlers={{
+                                click: (e) => {
+                                    console.log('e.latlng', e.latlng);
+                                }
+                            }}
                         />
                     )
                 }

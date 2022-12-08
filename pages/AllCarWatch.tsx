@@ -5,7 +5,7 @@ import _BaseButton from "../component/atoms/button/_BaseButton";
 import { useModal } from "../component/hooks/useModal";
 import { AdminIdContext } from "./_app";
 
-const getCarInfoUrl = 'http://saza.kohga.local:3001/getCarInfo';
+const getCarInfoUrl = 'http://saza.kohga.local/getCarInfo';
 
 const AllCarWatch: NextPage = () => {
     const modal = useModal();

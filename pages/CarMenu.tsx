@@ -6,8 +6,8 @@ import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { useModal } from "../component/hooks/useModal";
 import { UserIdContext } from "./_app";
 
-const CarUseCheckUrl = 'http://saza.kohga.local:3001/isAcceptable';
-const EndPageUrl = 'http://saza.kohga.local:3001/terminate';
+const CarUseCheckUrl = 'http://saza.kohga.local/isAcceptable';
+const EndPageUrl = 'http://saza.kohga.local/terminate';
 
 interface Request {
     userId: string

@@ -13,7 +13,7 @@ interface ResChangePasswd {
     succeeded: boolean,
 }
 
-const PasswdUrl = 'http://saza.kohga.local:3001/changePasswd';
+const PasswdUrl = 'http://saza.kohga.local/changePasswd';
 
 const Passwd: NextPage = () => {
     const modal = useModal();

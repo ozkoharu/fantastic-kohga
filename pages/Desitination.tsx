@@ -66,10 +66,10 @@ interface reqRouteSave {
     succeeded: boolean,
     routeName?: string,
 }
-const PostAstarUrl = 'http://saza.kohga.local:3001/astar';
-const PostOkRouteUrl = 'http://saza.kohga.local:3001/reqPassable';
-const PostRoutingUrl = 'http://saza.kohga.local:3001/execRoute';
-const PostRouteSaveUrl = 'http://saza.kohga.local:3001/saveRoute';
+const PostAstarUrl = 'http://saza.kohga.local/astar';
+const PostOkRouteUrl = 'http://saza.kohga.local/reqPassable';
+const PostRoutingUrl = 'http://saza.kohga.local/execRoute';
+const PostRouteSaveUrl = 'http://saza.kohga.local/saveRoute';
 
 export const DynamicMapNoSSR = dynamic(() => {
     return (
