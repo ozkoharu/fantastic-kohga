@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid } from "react-loader-spinner";
+import { Grid } from 'react-loader-spinner';
 
 interface Props {
     isShow: boolean;
