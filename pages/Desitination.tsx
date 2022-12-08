@@ -5,7 +5,7 @@ import React, { useState, SetStateAction, useContext, useEffect } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import { circle, LatLng } from "leaflet";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
-import { UserIdContext } from "./_app";
+import { LoadingContext, UserIdContext } from "./_app";
 import { useModal } from "../component/hooks/useModal";
 
 
@@ -90,6 +90,7 @@ const Desitination: NextPage = () => {
     const [isAfterRouteSearch, setIsAfterRouteSearch] = useState<boolean>(false);
     const [middleFlag, setMiddleFlag] = useState<number>(-1);
     const router = useRouter();
+    const { setLoading } = useContext(LoadingContext);
     const PostUserId: Request = {
         userId: userId
     }
@@ -180,6 +181,7 @@ const Desitination: NextPage = () => {
             promises.push(resPromise);
         }
         try {
+            setLoading(true);
             const results = await Promise.all(promises);
             const prepoly: LatLng[][] = [];
             for (const elem of results) {
@@ -203,6 +205,7 @@ const Desitination: NextPage = () => {
             console.log(e);
         } finally {
             allButtons(false);
+            setLoading(false);
         }
     }
     const onClickBack = () => {

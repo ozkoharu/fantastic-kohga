@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useModal } from "../component/hooks/useModal";
-import { AdminIdContext } from "./_app";
+import { AdminIdContext, LoadingContext } from "./_app";
 
 interface ReqAdmin {
     adminName: string,
@@ -21,7 +21,7 @@ const Login = () => {
     const { adminId, setAdminId } = useContext(AdminIdContext);
     const [input, setInput] = useState<string>('');
     const [passwd, setPasswd] = useState<string>('');
-
+    const { setLoading } = useContext(LoadingContext);
     const PostAdminData: ReqAdmin = {
         adminName: input,
         adminPass: passwd,
@@ -29,6 +29,7 @@ const Login = () => {
 
     const onClickLogin = async () => {
         try {
+            setLoading(true);
             const res = await fetch(AdminUrl, {
                 method: "POST",
                 headers: {
@@ -55,6 +56,7 @@ const Login = () => {
             );
             modal.open();
         }
+        setLoading(false);
 
     }
     const onClickCansel = () => {
