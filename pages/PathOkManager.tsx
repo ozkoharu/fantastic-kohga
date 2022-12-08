@@ -11,7 +11,11 @@ import { AdminIdContext } from "./_app";
 
 const addPassableUrl = 'http://sazasub.kohga.local/addPassable';
 const reqPassAdminUrl = 'http://sazasub.kohga.local/reqPassAdmin';
-const EndAdminUrl = 'http://sazasub.kohga.local/terminateAdmin';
+const delPassableUrl = 'http://sazasub.kohga.local/delPassable';
+
+interface BaseApiResponse {
+    succeeded: boolean
+}
 
 interface LatLngRadius {
     position: LatLng,
@@ -19,12 +23,6 @@ interface LatLngRadius {
 }
 interface LatLngRadiusID extends LatLngRadius {
     passableId: number,
-}
-interface ReqEndAdmin {
-    adminId: string
-}
-interface ResEndAdmin {
-    succeeded: boolean
 }
 interface ReqPassable {
     adminId: string,
@@ -37,8 +35,9 @@ interface ReqAddPassable {
     adminId: string,
     passPoints: LatLngRadius[]
 }
-interface ResAddPassable {
-    succeeded: boolean,
+interface ReqDelPassable {
+    adminId: string,
+    passId: number[],
 }
 
 export const DynamicCircleMap = dynamic(() => {
@@ -89,7 +88,7 @@ const PathOkManager: NextPage = () => {
                 },
                 body: JSON.stringify(addPassableData)
             });
-            const result = await res.json() as ResAddPassable;
+            const result = await res.json() as BaseApiResponse;
             if (result.succeeded) {
                 modal.setContent(
                     <>
@@ -148,12 +147,47 @@ const PathOkManager: NextPage = () => {
         setCircle(passableinfo);
         setRemoveCircle(passableinfo);
     }
-    const Removemode = () => {
-        //削除する時は削除したいCircleのIDだけPOSTする
-        //いっぱい選択して一気に消したい
-        setRemoveFlag(true);
-        console.log('remove');
+    const removeCircle = async () => {
+        if (removeFlag) {
+            const DelPassableData: ReqDelPassable = {
+                adminId: adminId,
+                passId: removeCircleId,
+            }
+            try {
+                const res = await fetch(delPassableUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(DelPassableData)
+                });
+                const result = await res.json() as BaseApiResponse;
+                if (result.succeeded) {
+                    modal.setContent(
+                        <>
+                            <p>削除に成功しました</p>
+                        </>
+                    );
+                    modal.open();
+                } else {
+                    modal.setContent(
+                        <>
+                            <p>削除に失敗しました</p>
+                        </>
+                    );
+                    modal.open();
+                }
+            } catch (e) {
+                modal.setContent(
+                    <>
+                        <p>通信エラー</p>
+                    </>
+                );
+                modal.open();
+            }
+        }
     }
+
 
     return (
         <>
@@ -168,14 +202,14 @@ const PathOkManager: NextPage = () => {
             <CheckBoxForm name="pathOk" id="pathOk" onChange={onChangePathOk}>
                 通行可能領域表示
             </CheckBoxForm>
-            <_BaseButton onClick={Removemode}>
+            <_BaseButton onClick={() => setRemoveFlag(true)}>
                 領域削除モード
             </_BaseButton>
             <_BaseButton onClick={onClickBack}>
                 戻る
             </_BaseButton>
             {
-                removeFlag ? <_BaseButton>削除</_BaseButton> : null
+                removeFlag ? <_BaseButton onClick={removeCircle}>削除</_BaseButton> : null
             }
 
             <DynamicCircleMap
