@@ -9,9 +9,9 @@ import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { useModal } from "../component/hooks/useModal";
 import { AdminIdContext } from "./_app";
 
-const addPassableUrl = 'http://saza.kohga.local/addPassable';
-const reqPassAdminUrl = 'http://saza.kohga.local/reqPassAdmin';
-const EndAdminUrl = 'http://saza.kohga.local/terminateAdmin';
+const addPassableUrl = 'http://sazasub.kohga.local/addPassable';
+const reqPassAdminUrl = 'http://sazasub.kohga.local/reqPassAdmin';
+const EndAdminUrl = 'http://sazasub.kohga.local/terminateAdmin';
 
 interface LatLngRadius {
     position: LatLng,

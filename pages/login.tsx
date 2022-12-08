@@ -13,7 +13,7 @@ interface ResAdmin {
     adminId?: string,
 }
 
-const AdminUrl = 'http://saza.kohga.local/loginAdmin';
+const AdminUrl = 'http://sazasub.kohga.local/loginAdmin';
 
 const Login = () => {
     const router = useRouter();

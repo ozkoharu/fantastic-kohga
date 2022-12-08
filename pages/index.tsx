@@ -4,7 +4,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import { useModal } from "../component/hooks/useModal";
 import { UserIdContext } from "./_app";
-const CreateUserUrl = 'http://saza.kohga.local/createUser';
+const CreateUserUrl = 'http://sazasub.kohga.local/createUser';
 
 
 const WelcomePage: NextPage = () => {
