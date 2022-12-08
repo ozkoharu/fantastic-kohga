@@ -103,8 +103,7 @@ const ExistsPage: NextPage = () => {
                 console.log('keirohyouji', result);
                 if (result.route !== undefined) setPoly(result.route);
                 if (result.dest !== undefined) setDest(result.dest);
-                console.log('ケイスケ本田地点', dest);
-                console.log('ケイスケ本田経路', poly);
+
             } else {
                 modal.setContent(
                     <>
