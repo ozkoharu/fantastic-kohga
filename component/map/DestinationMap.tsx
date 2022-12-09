@@ -211,7 +211,7 @@ const DesitinationMap: React.FC<Props> = ({
     }
 
     return (
-        <MapContainer center={position} zoom={zoomlebel} scrollWheelZoom={false} doubleClickZoom={false} >
+        <MapContainer center={position} zoom={zoomlebel} doubleClickZoom={false} >
             <TileLayer
                 attribution='&copy; <a href="http://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a> contributors'
                 url="https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"

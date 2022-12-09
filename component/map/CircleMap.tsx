@@ -116,7 +116,7 @@ const CircleMap: React.FC<Props> = ({
             {
                 modal.show()
             }
-            <MapContainer center={position} zoom={zoomlebel} scrollWheelZoom={false} doubleClickZoom={false} >
+            <MapContainer center={position} zoom={zoomlebel} doubleClickZoom={false} >
                 <TileLayer
                     attribution='&opy; <a href="http://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a> contributors'
                     url="https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"
