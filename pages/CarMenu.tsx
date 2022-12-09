@@ -72,10 +72,8 @@ const CarMenu: NextPage = () => {
             )
             console.log(e);
             modal.open();
-        } finally {
-            target.disabled = false;
-
         }
+        target.disabled = false;
     };
     const onClickDesitination = onClickGenerator('/Desitination', CarUseCheckUrl)
 
