@@ -151,50 +151,107 @@ const PathOkManager: NextPage = () => {
         setCircle(passableinfo);
         setRemoveCircle(passableinfo);
     }
+    const reqPassAdmin = async () => {
+        const reqPassData: ReqPassable = {
+            adminId: adminId
+        };
+        const temp = [];
+        try {
+            const res = await fetch(reqPassAdminUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reqPassData)
+            });
+            const result = await res.json() as ResPassable;
+            if (result.succeeded) {
+                for (const elem of result.passableInfo || []) {
+                    temp.push(elem);
+                }
+                setLastNum(temp.length);
+            } else {
+                modal.setContent(
+                    <>
+                        <p>失敗</p>
+                    </>
+                )
+            }
+        } catch (e) {
+            modal.setContent(
+                <>
+                    <p>通信エラー</p>
+                </>
+            );
+            modal.open();
+        }
+        setCircle(temp);
+        setRemoveCircle(temp);
+    }
+    const AsyncModal = (valueGenerator: (r: (arg0: any) => void) => React.SetStateAction<React.ReactNode>) => new Promise<any>((r) => {
+        modal.setContent(valueGenerator(r));
+        modal.setModalHander(() => {
+            modal.close();
+            r(false);
+        });
+        modal.open();
+    })
     const removeCircle = async () => {
         if (removeFlag) {
             const DelPassableData: ReqDelPassable = {
                 adminId: adminId,
                 passId: removeCircleId,
             }
-            try {
-                const res = await fetch(delPassableUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(DelPassableData)
-                });
-                const result = await res.json() as ResDelPassable;
-                if (result.succeeded) {
-                    setRemoveCircle(result.passPoints);
+            const issave = await AsyncModal((r) =>
+                <>
+                    <p>本当に削除しますか？</p>
+                    <button onClick={() => {
+                        modal.close();
+                        r(true);
+                    }}>OK</button>
+                </>
+            );
+            if (issave) {
+                try {
+                    const res = await fetch(delPassableUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(DelPassableData)
+                    });
+                    const result = await res.json() as ResDelPassable;
+                    if (result.succeeded) {
+                        setRemoveCircle(result.passPoints);
+                        modal.setContent(
+                            <>
+                                <p>削除に成功しました</p>
+                            </>
+                        );
+                        modal.open();
+                    } else {
+                        modal.setContent(
+                            <>
+                                <p>削除に失敗しました</p>
+                            </>
+                        );
+                        modal.open();
+                    }
+                } catch (e) {
                     modal.setContent(
                         <>
-                            <p>削除に成功しました</p>
+                            <p>通信エラー</p>
                         </>
                     );
                     modal.open();
-                } else {
-                    modal.setContent(
-                        <>
-                            <p>削除に失敗しました</p>
-                        </>
-                    );
-                    modal.open();
+                } finally {
+                    setRemoveFlag(false);
                 }
-            } catch (e) {
-                modal.setContent(
-                    <>
-                        <p>通信エラー</p>
-                    </>
-                );
-                modal.open();
-            } finally {
-                setRemoveFlag(false);
+            } else {
+                return;
             }
         }
     }
-
 
     return (
         <>
