@@ -311,7 +311,7 @@ const Desitination: NextPage = () => {
             data: poly,
             junkai: junkai,
         };
-
+        console.log('debugRouteSaveData', PostRouteSave);
         try {
             const res = await fetch(PostRouteSaveUrl, {
                 method: "POST",
