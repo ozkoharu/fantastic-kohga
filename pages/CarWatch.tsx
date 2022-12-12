@@ -99,6 +99,7 @@ const CarWatch: NextPage = () => {
                 if (result.arrival !== undefined) setArrival(result.arrival);
                 if (result.arrange !== undefined) setArrange(result.arrange);
                 if (result.reserve !== undefined) setReserve(result.reserve);
+                console.log('result.data', result);
                 console.log('result.status', result.status);
 
                 if (result.status) {
