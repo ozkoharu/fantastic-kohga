@@ -40,7 +40,6 @@ const PostReqRouteUrl = 'http://sazasub.kohga.local/reqRoute';
 const PostReqRouteNameUrl = 'http://sazasub.kohga.local/routeName';
 const PostPathRoutingUrl = 'http://sazasub.kohga.local/execRoute';
 
-
 const ExistsPage: NextPage = () => {
     const router = useRouter();
     const modal = useModal();

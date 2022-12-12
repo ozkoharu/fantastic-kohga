@@ -104,12 +104,12 @@ const CarWatch: NextPage = () => {
                 if (result.status) {
                     console.log('生きてる');
                 } else if (result.status === undefined) {
-                    modal.setContent(
-                        <>
-                            <p>車を確保できませんでした<br />もう一度車を確保します</p>
-                        </>
-                    );
-                    modal.open();
+                    // modal.setContent(
+                    //     <>
+                    //         <p>車を確保できませんでした<br />もう一度車を確保します</p>
+                    //     </>
+                    // );
+                    // modal.open();
                 }
                 else {
                     modal.setContent(
