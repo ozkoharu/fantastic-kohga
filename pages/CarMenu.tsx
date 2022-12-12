@@ -96,8 +96,6 @@ const CarMenu: NextPage = () => {
         modal.open();
     })
 
-
-
     return (
         <>
             {
