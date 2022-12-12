@@ -41,15 +41,6 @@ const CircleMap: React.FC<Props> = ({
 }) => {
     const modal = useModal();
 
-    const AsyncModal = (valueGenerator: (r: (arg0: any) => void) => React.SetStateAction<React.ReactNode>) => new Promise<any>((r) => {
-        modal.setContent(valueGenerator(r));
-        modal.setModalHander(() => {
-            modal.close();
-            r(false);
-        });
-        modal.open();
-    });
-
     const ClickCircle = () => {
         useMapEvents({
             click(e) {
