@@ -13,3 +13,13 @@ export interface PassableInfo {
     radius: number,
     passableId: number,
 };
+
+export interface PassbleNames {
+    routeName: string,
+    available: boolean,
+};
+export interface PassableInfo {
+    position: Position,
+    radius: number,
+    passableId: number,
+};
