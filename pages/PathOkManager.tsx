@@ -1,9 +1,8 @@
 import { LatLng } from "leaflet";
 import { NextPage } from "next";
-import { MODERN_BROWSERSLIST_TARGET } from "next/dist/shared/lib/constants";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { useModal } from "../component/hooks/useModal";

@@ -1,7 +1,6 @@
 import { LatLng } from "leaflet";
-import { NextPage } from "next";
-import React, { SetStateAction, useState } from "react";
-import { Circle, MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
+import React from "react";
+import { Circle, MapContainer, TileLayer, useMapEvents } from "react-leaflet";
 import { useModal } from "../hooks/useModal";
 
 interface LatLngRadius {

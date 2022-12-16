@@ -2,7 +2,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
-import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { useModal } from "../component/hooks/useModal";
 import { UserIdContext } from "./_app";
 

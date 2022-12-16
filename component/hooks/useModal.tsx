@@ -1,4 +1,4 @@
-import React, { Children, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 export const useModal = () => {
     const [isShow, setShow] = useState<boolean>(false);
