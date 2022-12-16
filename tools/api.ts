@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from 'tools/types';
 
 // APIとの通信周りの関数と型たち
 

@@ -2,10 +2,10 @@ import { LatLng } from "leaflet";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import _BaseButton from "../component/atoms/button/_BaseButton";
-import { useModal } from "../component/hooks/useModal";
-import { DynamicCarWatchMap } from "./CarWatch";
-import { UserIdContext } from "./_app";
+import _BaseButton from "component/atoms/button/_BaseButton";
+import { useModal } from "component/hooks/useModal";
+import { DynamicCarWatchMap } from "pages/CarWatch";
+import { UserIdContext } from "pages/_app";
 
 interface ReqRouteData {
     userId: string;

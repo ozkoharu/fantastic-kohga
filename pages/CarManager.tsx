@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import _BaseButton from "../component/atoms/button/_BaseButton";
-import { useModal } from "../component/hooks/useModal";
-import { AdminIdContext } from "./_app";
+import _BaseButton from "component/atoms/button/_BaseButton";
+import { useModal } from "component/hooks/useModal";
+import { AdminIdContext } from "pages/_app";
 
 const EndAdminUrl = 'http://sazasub.kohga.local/terminateAdmin';
 

@@ -1,9 +1,9 @@
-import '../styles/styles.scss';
+import 'styles/styles.scss';
 import "leaflet/dist/leaflet.css";
 import type { AppProps } from 'next/app';
 import React, { createContext, useState } from 'react';
-import { PageLoading } from '../component/atoms/pageLoading';
-import { usePageLoadingType } from '../component/hooks/usepageLoading';
+import { PageLoading } from 'component/atoms/pageLoading';
+import { usePageLoadingType } from 'component/hooks/usepageLoading';
 
 
 export const UserIdContext = createContext({} as {

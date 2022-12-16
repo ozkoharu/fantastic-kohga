@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
-import _BaseButton from "../component/atoms/button/_BaseButton";
-import { useModal } from "../component/hooks/useModal";
-import { UserIdContext } from "./_app";
+import _BaseButton from "component/atoms/button/_BaseButton";
+import { useModal } from "component/hooks/useModal";
+import { UserIdContext } from "pages/_app";
 
 const CarUseCheckUrl = 'http://sazasub.kohga.local/isAcceptable';
 const EndPageUrl = 'http://sazasub.kohga.local/terminate';

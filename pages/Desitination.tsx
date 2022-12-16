@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import React, { useState, SetStateAction, useContext, useEffect } from "react";
-import _BaseButton from "../component/atoms/button/_BaseButton";
+import _BaseButton from "component/atoms/button/_BaseButton";
 import { LatLng } from "leaflet";
-import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
-import { LoadingContext, UserIdContext } from "./_app";
-import { useModal } from "../component/hooks/useModal";
+import { CheckBoxForm } from "component/atoms/checkbox/checkBoxForm";
+import { LoadingContext, UserIdContext } from "pages/_app";
+import { useModal } from "component/hooks/useModal";
 
 
 

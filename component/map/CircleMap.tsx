@@ -1,7 +1,7 @@
 import { LatLng } from "leaflet";
-import React from "react";
+import React, { SetStateAction, useState } from "react";
 import { Circle, MapContainer, TileLayer, useMapEvents } from "react-leaflet";
-import { useModal } from "../hooks/useModal";
+import { useModal } from "component/hooks/useModal";
 
 interface LatLngRadius {
     position: LatLng,

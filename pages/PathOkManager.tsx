@@ -3,10 +3,10 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
-import _BaseButton from "../component/atoms/button/_BaseButton";
-import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
-import { useModal } from "../component/hooks/useModal";
-import { AdminIdContext } from "./_app";
+import _BaseButton from "component/atoms/button/_BaseButton";
+import { CheckBoxForm } from "component/atoms/checkbox/checkBoxForm";
+import { useModal } from "component/hooks/useModal";
+import { AdminIdContext } from "pages/_app";
 
 const addPassableUrl = 'http://sazasub.kohga.local/addPassable';
 const reqPassAdminUrl = 'http://sazasub.kohga.local/reqPassAdmin';
