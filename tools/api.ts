@@ -3,7 +3,7 @@ import * as Types from './types';
 // APIとの通信周りの関数と型たち
 
 interface ApiResult {
-    succeeded: string,
+    succeeded: boolean,     // 処理に成功すると真
 };
 type GeneralId = string;
 export type UserId = GeneralId;
