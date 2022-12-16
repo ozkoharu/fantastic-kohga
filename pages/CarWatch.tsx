@@ -3,9 +3,9 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { useModal } from "../component/hooks/useModal";
-import { UserIdContext } from "./_app";
-import _BaseButton from "../component/atoms/button/_BaseButton";
+import { useModal } from "component/hooks/useModal";
+import { UserIdContext } from "pages/_app";
+import _BaseButton from "component/atoms/button/_BaseButton";
 
 
 interface ReqMonitorCarData {

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
-import { useModal } from "../component/hooks/useModal";
-import { AdminIdContext, LoadingContext } from "./_app";
+import { useModal } from "component/hooks/useModal";
+import { AdminIdContext, LoadingContext } from "pages/_app";
 
 interface ReqAdmin {
     adminName: string,

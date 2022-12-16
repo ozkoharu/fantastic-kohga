@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import { useModal } from "../component/hooks/useModal";
-import { AdminIdContext } from "./_app";
+import { useModal } from "component/hooks/useModal";
+import { AdminIdContext } from "pages/_app";
 
 interface ReqChangePasswd {
     AdminId: string,

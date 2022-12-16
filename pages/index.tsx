@@ -1,9 +1,9 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import _BaseButton from "../component/atoms/button/_BaseButton";
-import { useModal } from "../component/hooks/useModal";
-import { UserIdContext } from "./_app";
+import _BaseButton from "component/atoms/button/_BaseButton";
+import { useModal } from "component/hooks/useModal";
+import { UserIdContext } from "pages/_app";
 const CreateUserUrl = 'http://sazasub.kohga.local/createUser';
 
 

@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { LoadingContext } from "../../pages/_app";
+import React, { createContext, useContext } from "react";
+import { LoadingContext } from "pages/_app";
 
 export type usePageLoadingType = {
     isShow: boolean;

@@ -1,8 +1,8 @@
 import { LatLng } from "leaflet";
 import React, { SetStateAction } from "react";
 import { MapContainer, Marker, TileLayer, useMapEvents, Circle, Polyline } from "react-leaflet";
-import { LatLangRadius } from "../../pages/Desitination";
-import { relayPoint } from "../../pages/Desitination";
+import { LatLangRadius } from "pages/Desitination";
+import { relayPoint } from "pages/Desitination";
 import L from 'leaflet';
 
 const position = new LatLng(38.72311671577611, 141.0346841825174);
