@@ -1,5 +1,4 @@
-import React, { createContext, useContext } from "react";
-import { Grid } from "react-loader-spinner";
+import { useContext } from "react";
 import { LoadingContext } from "../../pages/_app";
 
 export type usePageLoadingType = {

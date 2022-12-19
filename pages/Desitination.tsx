@@ -3,7 +3,7 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import React, { useState, SetStateAction, useContext, useEffect } from "react";
 import _BaseButton from "../component/atoms/button/_BaseButton";
-import { circle, LatLng } from "leaflet";
+import { LatLng } from "leaflet";
 import { CheckBoxForm } from "../component/atoms/checkbox/checkBoxForm";
 import { LoadingContext, UserIdContext } from "./_app";
 import { useModal } from "../component/hooks/useModal";
